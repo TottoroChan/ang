@@ -1,0 +1,11 @@
+<div id="player">
+    <label>{{ algorithmId }}</label><br />
+    <button id="run" (click)="runAlgorithm()">(>)</button>
+</div>
+<div id="algorithms">
+    8 <input type="checkbox" [(ngModel)]="isUsingDiagonal" (change)="disableJPS()"><br />
+    <div *ngFor="let option of algorithmList; index as i">
+        <input type="radio" [id]="option[0]" [value]="option[0]" [(ngModel)]="algorithmId" [attr.selected]="i == 0 ? true : null" />
+        <label>{{ option[1] }}</label>
+    </div>
+</div>

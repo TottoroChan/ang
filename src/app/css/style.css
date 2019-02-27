@@ -1,0 +1,78 @@
+input {
+  width: 50px;
+  float: right;
+}
+
+#panel {
+  background: #2795ee47;
+  display: block;
+  height: 120px;
+  border: 1px solid black;
+  padding: 10px;
+}
+
+#panel #settings {
+  float: left;
+}
+
+#panel #settings .element {
+  border: 1px solid black;
+  margin: 0px 10px;
+  display: inline-block;
+}
+
+#panel #settings .element .element_line {
+  width: 160px;
+  margin: 5px;
+}
+
+#panel #algorithms {
+  float: right;
+}
+
+#canvas {
+  margin: 10px;
+  text-align: center;
+}
+
+#cell {
+  fill: white;
+}
+
+#pathCell {
+  fill: #25ed4a;
+}
+
+#neighbourCell {
+  fill: #b6ffb6;
+}
+
+#cell.researchedPoint, #neighbourCell.researchedPoint {
+  fill: #e0e0e0;
+}
+
+#jumpPoint {
+  fill: #eeed94;
+}
+
+#jumpPoint.bestJumpPoint {
+  fill: #63ccc1;
+}
+
+rect {
+  stroke: gray;
+  stroke-width: 0.5;
+}
+
+#start {
+  fill: #00AA00;
+}
+
+#finish {
+  fill: #AA0000;
+}
+
+.active {
+  stroke: black;
+  stroke-width: 2px;
+}
