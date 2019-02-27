@@ -3,7 +3,8 @@
     "version": "1.0.0",
     "scripts": {
         "dev": "webpack-dev-server --hot --open",
-        "build": "webpack"
+        "build": "webpack",
+        "deploy": "firebase deploy"
     },
     "dependencies": {
         "@angular/common": "7.2.3",

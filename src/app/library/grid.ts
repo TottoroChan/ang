@@ -122,7 +122,7 @@ export class Grid {
         return result;
     }
 
-    neighbourNodes(vertex: Vertex, isUsingDiagonal: boolean): Observable<Vertex[]> {
+    neighbourNodes(vertex: Vertex, isUsingDiagonal: boolean): Vertex[] {
         let result: Vertex[] = [];
         var neighbours = this.getNeighboursId(vertex.point, isUsingDiagonal);
 
@@ -134,7 +134,7 @@ export class Grid {
             }
         }
 
-        return of(result);
+        return result;
     }
 
     fillNeighbour(map: number[][]) {
