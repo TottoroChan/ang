@@ -2,23 +2,31 @@ import { Vertex } from "../vertex";
 import { PathFinder } from "./pathfinder";
 import { CellType } from "../helper";
 import { Grid } from "../grid";
-import { Observable, of } from "rxjs";
+import { Player } from "../player";
 
 export class JPS extends PathFinder {
     jumpedpoints: any[];
     bestPoint: Vertex;
-    constructor(grid: Grid, isUsingDiagonal: boolean) {
-        super(grid, isUsingDiagonal);
+    constructor(grid: Grid, isUsingDiagonal: boolean, player: Player) {
+        super(grid, isUsingDiagonal, player);
         this.jumpedpoints = [];
         this.bestPoint = new Vertex(this.grid.startPoint, null);
         this.bestPoint.setH(this.isUsingDiagonal, this.grid.finishPoint);
     }
 
-    work(): Vertex {
-        return null;
-        /*this.jumpedpoints = [];
+    async work(): Promise<Vertex> {
+        this.jumpedpoints = [];
         do {
-            this.jumpedpoints = this.jumpedpoints.filter(jp => jp.point != this.bestPoint.point);
+            await this.player.whait();
+            this.bestPoint = this.step();
+
+        } while (!this.grid.checkGoal(this.bestPoint.point));
+       
+        return this.bestPoint;
+    }
+
+    step(): Vertex{
+        this.jumpedpoints = this.jumpedpoints.filter(jp => jp.point != this.bestPoint.point);
             var neighbours = this.allNeighbourNodes();
             neighbours.forEach(element => {
                 var result = this.getJumpedPoints(element);
@@ -30,27 +38,23 @@ export class JPS extends PathFinder {
             this.grid.fillNeighbour(this.jumpedpoints.map(jp => jp.point));
             
             if (this.jumpedpoints.length) {
-                this.bestPoint = this.jumpedpoints[0];
-            }
-            else {
-                break;
+                return this.jumpedpoints[0];
             }
 
+            let bestPoint = this.jumpedpoints[0];
             this.jumpedpoints.forEach(element => {
                 if (element.h < this.bestPoint.h)
-                    this.bestPoint = element;
+                    bestPoint = element;
             });
 
-        } while (!this.grid.checkGoal(this.bestPoint.point));
-       
-        return this.bestPoint;*/
+            return bestPoint;
     }
 
     allNeighbourNodes(): Vertex[] {
         let neighbours: Vertex[] = [];
         
         if (this.bestPoint.parent == null) {
-           // neighbours = this.grid.neighbourNodes(this.bestPoint, this.isUsingDiagonal);
+           neighbours = this.grid.neighbourNodes(this.bestPoint, this.isUsingDiagonal);
         }
         else {
             if (this.itIsMovmentPoint([this.bestPoint.point[0] + this.bestPoint.direction[0], this.bestPoint.point[1] + this.bestPoint.direction[1]])

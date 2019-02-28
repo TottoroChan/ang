@@ -1,6 +1,10 @@
 <div id="player">
     <label>{{ algorithmId }}</label><br />
-    <button id="run" (click)="runAlgorithm()">(>)</button>
+    <div><button id="run" (click)="backward()">(<<)</button>
+    <button id="run" (click)="play()">(>)</button>
+    <button id="run" (click)="stop()">(||)</button>
+    <button id="run" (click)="forward()">(>>)</button></div>
+    
 </div>
 <div id="algorithms">
     8 <input type="checkbox" [(ngModel)]="isUsingDiagonal" (change)="disableJPS()"><br />

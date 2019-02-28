@@ -1,7 +1,7 @@
 import { Vertex } from "../vertex";
 import { PathFinder } from "./pathfinder";
 import { Grid } from "../grid";
-import { Observable, of } from "rxjs";
+import { Player } from "../player";
 
 
 export class Astar extends PathFinder {
@@ -10,11 +10,12 @@ export class Astar extends PathFinder {
     resultSet: Vertex[];
     neighbours:  Vertex[];
 
-    constructor(grid: Grid, isUsingDiagonal: boolean) {        
-        super(grid, isUsingDiagonal);
+    constructor(grid: Grid, isUsingDiagonal: boolean, player: Player) {        
+        super(grid, isUsingDiagonal, player);
         this.betterValue = false;
         this.openSet = []; // Множество вершин, которые предстоит изучить.
         this.resultSet = []; // Множество изученых вершин
+        
         let startPoint = new Vertex(this.grid.startPoint, null);
         startPoint.setG(this.grid.startPoint);
         startPoint.setH(this.isUsingDiagonal, this.grid.finishPoint);
@@ -22,8 +23,9 @@ export class Astar extends PathFinder {
         this.openSet.push(startPoint); //добавление начальной вершины 
     }
 
-    work(): Vertex {        
+    async work(): Promise<Vertex> {        
         while (this.openSet.length > 0) { //пока список изученых не пустой
+            await this.player.whait();
             let result = this.step();
             if (result)
                 return result;

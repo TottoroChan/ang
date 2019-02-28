@@ -1,17 +1,24 @@
 import { Vertex } from "../vertex";
 import { Grid } from "../grid";
+import { Player } from "../player";
 
 export abstract class PathFinder {
 
     grid: Grid;
     isUsingDiagonal: boolean;
+    player: Player;
 
-    constructor(grid: Grid, isUsingDiagonal: boolean) {
+    constructor(grid: Grid, isUsingDiagonal: boolean, player: Player) {
         this.grid = grid;
         this.isUsingDiagonal = isUsingDiagonal;
+        this.player = player;
     }
 
-    work(): Vertex {
+    async work(): Promise<Vertex> {
+        throw new Error("Not implemented");
+    }
+
+    step(): Vertex {
         throw new Error("Not implemented");
     }
 

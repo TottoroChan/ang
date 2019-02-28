@@ -1,7 +1,6 @@
 import * as d3 from "d3";
 import { Vertex } from "./vertex";
-import { CellColor, ShiftMatrix, CellType } from "./helper";
-import { Observable, of } from "rxjs"
+import { CellColor, CellType } from "./helper";
 
 export class Grid {
     isPenDown: boolean;
@@ -11,7 +10,7 @@ export class Grid {
     finishPoint: number[];
     dataMatrix: Uint8Array;
     currentColor: CellColor;
-    shiftMatrix: ShiftMatrix;
+    shiftMatrix: number[][];
 
     constructor(heightOfCell: number, workField: number[], startPoint: number[], finishPoint: number[]) {
         this.isPenDown = false;
@@ -21,7 +20,7 @@ export class Grid {
         this.finishPoint = finishPoint;
         this.dataMatrix = new Uint8Array(this.workField[0] * this.workField[1]);
         this.currentColor = CellColor.Empty;
-        this.shiftMatrix = new ShiftMatrix();
+        this.shiftMatrix = [[-1, 0], [0, -1], [0, 1], [1, 0], [-1, -1], [-1, 1], [1, -1], [1, 1]];
     }
 
     createGrid() {
@@ -105,18 +104,13 @@ export class Grid {
     //Поски всех соседей точки 
     getNeighboursId(p: number[], isUsingDiagonal: boolean): number[][] {
         let result: number[][] = [];
-        for (let i = 0; i < this.shiftMatrix.normal.length; i++) {
-            let point = [p[0] + this.shiftMatrix.normal[i][0], p[1] + this.shiftMatrix.normal[i][1]];
+        let n = isUsingDiagonal ? 8 : 4;
+
+        for (let i = 0; i < n; i++) {
+            let point = [p[0] + this.shiftMatrix[i][0], p[1] + this.shiftMatrix[i][1]];
 
             if (point[0] >= 0 && point[0] < this.workField[0] && point[1] >= 0 && point[1] < this.workField[1])
                 result.push(point)
-
-            if (isUsingDiagonal) {
-                point = [p[0] + this.shiftMatrix.diagonal[i][0], p[1] + this.shiftMatrix.diagonal[i][1]]
-
-                if (point[0] >= 0 && point[0] < this.workField[0] && point[1] >= 0 && point[1] < this.workField[1])
-                    result.push(point)
-            }
         }
 
         return result;
@@ -139,13 +133,17 @@ export class Grid {
 
     fillNeighbour(map: number[][]) {
         var grid = this;
-        var cells = d3.selectAll("#cell")
+        
+        d3.selectAll("#mainNeighbourCell").each(function() {
+            var item = d3.select(this);
+            item.attr("id", "neighbourCell");
+        });
 
-        cells.each(function () {
+        d3.selectAll("#cell").each(function () {
             var item = d3.select(this);
             for (var i = map.length - 1; i >= 0; i--)
                 if (+item.attr("cX") == map[i][0] && +item.attr("cY") == map[i][1]) {
-                    item.attr("id", "neighbourCell");
+                    item.attr("id", "mainNeighbourCell");
                     var index = grid.decryptValue([+item.attr("cX"), +item.attr("cY")]);
                     if (grid.dataMatrix[index] == CellType.Empty)
                         grid.dataMatrix[index] = CellType.Neighbour;
