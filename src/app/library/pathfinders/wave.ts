@@ -10,15 +10,23 @@ export class Wave extends PathFinder {
     constructor(grid: Grid, isUsingDiagonal: boolean, player: Player) {
         super(grid, isUsingDiagonal, player);
         this.d = 0;
-        
+
         let start = new Vertex(this.grid.startPoint, null);
         start.setD(this.d);
         this.wave = [start];
     }
 
     async work(): Promise<Vertex> {
+        let result = null;
         do {
-            let result = this.step();
+            this.d++;
+            let set = this.wave;
+            this.wave = [];
+
+            for (let i = 0; i < set.length; i++) {
+                await this.player.whait();
+                result = this.step(set[i]);
+            }
 
             if (this.grid.checkGoal(result.point)) {
                 return result;
@@ -29,20 +37,14 @@ export class Wave extends PathFinder {
         } while (this.wave.length > 0);
     }
 
-    step(): Vertex {
-        this.d++;
-        let set = this.wave;
-        this.wave = [];
+    step(vertex: Vertex): Vertex {
+        let neighbours = this.grid.neighbourNodes(vertex, this.isUsingDiagonal);
 
-        for (let e = 0; e < set.length; e++) {
-            let neighbours = this.grid.neighbourNodes(set[e], this.isUsingDiagonal);
+        for (let i = 0; i < neighbours.length; i++) {
+            if (!this.vertexisExist(this.wave, neighbours[i])) {
+                neighbours[i].parent = vertex;
 
-            for (let i = 0; i < neighbours.length; i++) {
-                if (!this.vertexisExist(this.wave, neighbours[i])) {
-                    neighbours[i].parent = set[e];
-
-                    return neighbours[i];
-                }
+                return neighbours[i];
             }
         }
     }

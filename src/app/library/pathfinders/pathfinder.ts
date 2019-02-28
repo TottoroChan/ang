@@ -18,10 +18,6 @@ export abstract class PathFinder {
         throw new Error("Not implemented");
     }
 
-    step(): Vertex {
-        throw new Error("Not implemented");
-    }
-
     reconstructPath(node: Vertex) {
         var path = [];
         while (node != null) {

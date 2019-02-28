@@ -15,7 +15,7 @@ export class Astar extends PathFinder {
         this.betterValue = false;
         this.openSet = []; // Множество вершин, которые предстоит изучить.
         this.resultSet = []; // Множество изученых вершин
-        
+
         let startPoint = new Vertex(this.grid.startPoint, null);
         startPoint.setG(this.grid.startPoint);
         startPoint.setH(this.isUsingDiagonal, this.grid.finishPoint);
@@ -45,8 +45,7 @@ export class Astar extends PathFinder {
         this.openSet.splice(index, 1); // удалям вершину и отправляем ее на изучение
         this.resultSet.push(vertex);
 
-        this.neighbours = this.grid.neighbourNodes(vertex, this.isUsingDiagonal); // список соседних точек			
-        this.grid.fillNeighbour(this.neighbours.map(res => res.point))
+        this.neighbours = this.grid.neighbourNodes(vertex, this.isUsingDiagonal); // список соседних точек		
 
         let neighbour = null;
         for (let i = 0; i < this.neighbours.length; i++) {

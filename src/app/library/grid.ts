@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import { Vertex } from "./vertex";
 import { CellColor, CellType } from "./helper";
+import { Player } from "./player";
 
 export class Grid {
     isPenDown: boolean;
@@ -82,23 +83,34 @@ export class Grid {
     }
 
     fillPath(path: number[][]) {
-        console.log("path")
-        console.log(path)
         d3.selectAll("#neighbourCell")
-            .each(function () {
+            .each(async function () {
                 var item = d3.select(this);
                 for (var i = path.length - 1; i >= 0; i--)
-                    if (+item.attr("cX") == path[i][0] && +item.attr("cY") == path[i][1])
+                    if (+item.attr("cX") == path[i][0] && +item.attr("cY") == path[i][1]){
                         item.attr("id", "pathCell");
+                    }
             });
-    }
+    }    
 
-    //Является ли точка финишем 
-    checkGoal(point: number[]) {
-        if (point[0] == this.finishPoint[0] && point[1] == this.finishPoint[1])
-            return true;
+    fillNeighbour(map: number[][]) {
+        var grid = this;
 
-        return false;
+        d3.selectAll("#mainNeighbourCell").each(function() {
+            var item = d3.select(this);
+            item.attr("id", "neighbourCell");
+        });
+
+        d3.selectAll("#cell").each(function () {
+            var item = d3.select(this);
+            for (var i = map.length - 1; i >= 0; i--)
+                if (+item.attr("cX") == map[i][0] && +item.attr("cY") == map[i][1]) {
+                    item.attr("id", "mainNeighbourCell");
+                    var index = grid.decryptValue([+item.attr("cX"), +item.attr("cY")]);
+                    if (grid.dataMatrix[index] == CellType.Empty)
+                        grid.dataMatrix[index] = CellType.Neighbour;
+                }
+        });
     }
 
     //Поски всех соседей точки 
@@ -127,28 +139,18 @@ export class Grid {
                 result.push(new Vertex(neighbours[i], null))
             }
         }
+        	
+        this.fillNeighbour(result.map(r => r.point))
 
         return result;
     }
 
-    fillNeighbour(map: number[][]) {
-        var grid = this;
-        
-        d3.selectAll("#mainNeighbourCell").each(function() {
-            var item = d3.select(this);
-            item.attr("id", "neighbourCell");
-        });
+    //Является ли точка финишем 
+    checkGoal(point: number[]) {
+        if (point[0] == this.finishPoint[0] && point[1] == this.finishPoint[1])
+            return true;
 
-        d3.selectAll("#cell").each(function () {
-            var item = d3.select(this);
-            for (var i = map.length - 1; i >= 0; i--)
-                if (+item.attr("cX") == map[i][0] && +item.attr("cY") == map[i][1]) {
-                    item.attr("id", "mainNeighbourCell");
-                    var index = grid.decryptValue([+item.attr("cX"), +item.attr("cY")]);
-                    if (grid.dataMatrix[index] == CellType.Empty)
-                        grid.dataMatrix[index] = CellType.Neighbour;
-                }
-        });
+        return false;
     }
 
     decryptValue(value: number[]) {

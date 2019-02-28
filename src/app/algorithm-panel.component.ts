@@ -13,7 +13,7 @@ import { Player } from './library/player';
     templateUrl: 'templates/algorithm-panel.component.html'
 })
 
-export class AlgorithmComponent{
+export class AlgorithmComponent {
     @Input() gridData: any;
     isUsingDiagonal: boolean = true;
     algorithm: PathFinder = null;
@@ -42,18 +42,15 @@ export class AlgorithmComponent{
 
     run() {
         if (this.algorithm != null) {
-            let result = null;
             this.algorithm.work()
-            .then((val) => {
-                console.log("val")
-                console.log(val); result = val});
-            console.log("result")
-            console.log(result)
-            this.algorithm.reconstructPath(result);
+                .then(path => { 
+                    this.algorithm.reconstructPath(path) 
+                });
+            ;
         }
     }
 
-    chooseAlgorithm() {        
+    chooseAlgorithm() {
         this.player = new Player();
 
         switch (this.algorithmId) {

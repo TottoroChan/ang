@@ -9,8 +9,8 @@ import { Grid } from './library/grid';
 
 export class ControlPanelComponent {
     heightOfCell: number = 30;
-    workField: number[] = [20, 20];
-    startPoint: number[] = [15, 17];
+    workField: number[] = [10, 10];
+    startPoint: number[] = [9, 9];
     finishPoint: number[] = [0, 0];
     grid: any;
 

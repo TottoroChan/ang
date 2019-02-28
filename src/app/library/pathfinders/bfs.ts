@@ -15,14 +15,13 @@ export class BFS extends PathFinder {
     async work(): Promise<Vertex> {
         while (this.queue.length > 0) {
             await this.player.whait();
-            var result = this.step();  
-            this.queue.push(result); //добавить в конец очереди
+            let result = this.step();   //добавить в конец очереди
 
             if (this.grid.checkGoal(result.point)) { // проверить, не является ли точка финишем
-                var result = this.queue.pop();
-
                 return result;
-            }          
+            }    
+            
+            this.queue.push(result);      
         }
     }
 
