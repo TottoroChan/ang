@@ -2,6 +2,7 @@ import { Vertex } from "../vertex";
 import { PathFinder } from "./pathfinder";
 import { Grid } from "../grid";
 import { Player } from "../player";
+import { platform } from "os";
 
 
 export class Astar extends PathFinder {
@@ -45,8 +46,10 @@ export class Astar extends PathFinder {
         this.openSet.splice(index, 1); // удалям вершину и отправляем ее на изучение
         this.resultSet.push(vertex);
 
+        this.grid.savePoint(vertex);
         this.neighbours = this.grid.neighbourNodes(vertex, this.isUsingDiagonal); // список соседних точек		
-
+        this.grid.fillNeighbour(this.neighbours.map(r => r.point));
+        
         let neighbour = null;
         for (let i = 0; i < this.neighbours.length; i++) {
             neighbour = this.neighbours[i];

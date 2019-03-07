@@ -19,6 +19,7 @@ export class JPS extends PathFinder {
         do {
             await this.player.whait();
             this.bestPoint = this.step();
+            this.grid.savePoint(this.bestPoint);
 
         } while (!this.grid.checkGoal(this.bestPoint.point));
        
@@ -29,6 +30,7 @@ export class JPS extends PathFinder {
         this.jumpedpoints = this.jumpedpoints.filter(jp => jp.point != this.bestPoint.point);
             var neighbours = this.allNeighbourNodes();
             neighbours.forEach(element => {
+                element.setParent(this.bestPoint)
                 var result = this.getJumpedPoints(element);
                 
                 if (result !== null) {
@@ -95,7 +97,7 @@ export class JPS extends PathFinder {
             return point;
         }
         
-        if (this.findForcedNeighbour(point).length) {
+        if (point.parent != null && this.findForcedNeighbour(point).length) {
             return point;
         }
         

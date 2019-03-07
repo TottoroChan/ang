@@ -22,30 +22,34 @@ export class Wave extends PathFinder {
             this.d++;
             let set = this.wave;
             this.wave = [];
-
             for (let i = 0; i < set.length; i++) {
                 await this.player.whait();
                 result = this.step(set[i]);
-            }
-
-            if (this.grid.checkGoal(result.point)) {
+            if (result) {
                 return result;
             }
+            }
 
-            result.setD(this.d);
-            this.wave.push(result);
         } while (this.wave.length > 0);
     }
 
     step(vertex: Vertex): Vertex {
+        this.grid.savePoint(vertex);
         let neighbours = this.grid.neighbourNodes(vertex, this.isUsingDiagonal);
+        this.grid.fillNeighbour(neighbours.map(r => r.point));
 
         for (let i = 0; i < neighbours.length; i++) {
             if (!this.vertexisExist(this.wave, neighbours[i])) {
                 neighbours[i].parent = vertex;
 
-                return neighbours[i];
+                if (this.grid.checkGoal(neighbours[i].point)) {
+                    return neighbours[i];
+                }
+                neighbours[i].setD(this.d);
+                this.wave.push(neighbours[i]);
             }
         }
+
+        return null;        
     }
 }

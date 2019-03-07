@@ -12,6 +12,7 @@ export class ControlPanelComponent {
     workField: number[] = [10, 10];
     startPoint: number[] = [9, 9];
     finishPoint: number[] = [0, 0];
+    transparency: number = 100;
     grid: any;
 
 
@@ -23,15 +24,27 @@ export class ControlPanelComponent {
     redrawField(): void {
         d3.select("#canvas")
             .selectAll("*")
+            .remove();            
+        d3.select("#stack")
+            .selectAll("*")
             .remove();
+        
 
-        this.heightOfCell = +d3.select("#fieldH").property("value");
-        this.workField = [+d3.select("#fieldR").property("value"), +d3.select("#fieldC").property("value")];
-        this.startPoint = [+d3.select("#startX").property("value"), +d3.select("#startY").property("value")];
-        this.finishPoint = [+d3.select("#finishX").property("value"), +d3.select("#finishY").property("value")];
-        console.log(this)
+        if (this.startPoint[0] > this.workField[0])
+            this.startPoint[0] = this.workField[0] -1;
+        if (this.startPoint[1] > this.workField[1])
+            this.startPoint[1] = this.workField[1] -1;
+        if (this.finishPoint[0] > this.workField[0])
+            this.finishPoint[0] = this.workField[0] -1;
+        if (this.finishPoint[1] > this.workField[1])
+            this.finishPoint[1] = this.workField[1] -1;
+
         this.grid = new Grid(this.heightOfCell, this.workField, this.startPoint, this.finishPoint);
         console.log(this.grid)
         this.grid.createGrid();
+    }
+
+    changeTransparency(){
+        this.grid.changeTransparency(this.transparency/100);
     }
 }

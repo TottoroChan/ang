@@ -9,6 +9,7 @@ export class Vertex {
     d: number;
     direction: number[];
     isWall: boolean;
+    weight: number;
 
     constructor(point: number[], parent: Vertex) {
         this.point = point; // координата
@@ -17,6 +18,10 @@ export class Vertex {
         if (parent != null) {
             this.direction = [point[0] - parent.point[0], point[1] - parent.point[1]]
         }
+    }
+
+    setWeight(weight: number){
+        this.weight = 1 + weight;
     }
 
     setG(start: number[]) {
@@ -38,6 +43,11 @@ export class Vertex {
 
     setD(d: number) {
         this.d = d;
+    }
+
+    setParent(parent: Vertex) {
+        this.parent = parent;
+        this.direction = [this.point[0] - parent.point[0], this.point[1] - parent.point[1]]
     }
 
     setWall(value: number) {

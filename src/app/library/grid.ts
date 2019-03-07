@@ -12,6 +12,7 @@ export class Grid {
     dataMatrix: Uint8Array;
     currentColor: CellColor;
     shiftMatrix: number[][];
+    transparency: number;
 
     constructor(heightOfCell: number, workField: number[], startPoint: number[], finishPoint: number[]) {
         this.isPenDown = false;
@@ -82,31 +83,39 @@ export class Grid {
             );
     }
 
+    changeTransparency(value: number){
+        this.transparency = value;
+    }
+
     fillPath(path: number[][]) {
         d3.selectAll("#neighbourCell")
             .each(async function () {
-                var item = d3.select(this);
-                for (var i = path.length - 1; i >= 0; i--)
-                    if (+item.attr("cX") == path[i][0] && +item.attr("cY") == path[i][1]){
+                let item = d3.select(this);
+                for (let i = path.length - 1; i >= 0; i--)
+                    if (+item.attr("cX") == path[i][0] && +item.attr("cY") == path[i][1]) {
                         item.attr("id", "pathCell");
                     }
             });
-    }    
-
+    }
+    
     fillNeighbour(map: number[][]) {
-        var grid = this;
+        let grid = this;
 
-        d3.selectAll("#mainNeighbourCell").each(function() {
-            var item = d3.select(this);
+        d3.selectAll("#currentpoint").each(function () {
+            let item = d3.select(this);
+            item.attr("id", "neighbourCell");
+        });
+        d3.selectAll("#mainNeighbourCell").each(function () {
+            let item = d3.select(this);
             item.attr("id", "neighbourCell");
         });
 
         d3.selectAll("#cell").each(function () {
-            var item = d3.select(this);
-            for (var i = map.length - 1; i >= 0; i--)
+            let item = d3.select(this);
+            for (let i = map.length - 1; i >= 0; i--)
                 if (+item.attr("cX") == map[i][0] && +item.attr("cY") == map[i][1]) {
                     item.attr("id", "mainNeighbourCell");
-                    var index = grid.decryptValue([+item.attr("cX"), +item.attr("cY")]);
+                    let index = grid.decryptValue([+item.attr("cX"), +item.attr("cY")]);
                     if (grid.dataMatrix[index] == CellType.Empty)
                         grid.dataMatrix[index] = CellType.Neighbour;
                 }
@@ -130,18 +139,18 @@ export class Grid {
 
     neighbourNodes(vertex: Vertex, isUsingDiagonal: boolean): Vertex[] {
         let result: Vertex[] = [];
-        var neighbours = this.getNeighboursId(vertex.point, isUsingDiagonal);
+        let neighbours = this.getNeighboursId(vertex.point, isUsingDiagonal);
 
-        for (var i = 0; i < neighbours.length; i++) {
-            var id = this.decryptValue(neighbours[i]);
+        for (let i = 0; i < neighbours.length; i++) {
+            let node = neighbours[i];
+            let id = this.decryptValue(node);
 
             if (id >= 0 && this.dataMatrix[id] != CellType.Wall) {
-                result.push(new Vertex(neighbours[i], null))
+                let vertex = new Vertex(node, null);
+                vertex.setWeight(this.dataMatrix[this.decryptValue(node)])
+                result.push(vertex)
             }
         }
-        	
-        this.fillNeighbour(result.map(r => r.point))
-
         return result;
     }
 
@@ -161,33 +170,63 @@ export class Grid {
         return [Math.ceil(value / this.workField[0]), Math.ceil(value % this.workField[5])];
     }
 
+    savePoint(vertex: Vertex){
+        if (vertex.parent != null){
+        let div = d3.select("#stack").append("div").attr('class', "stack-element").attr("x", vertex.point[0]).attr("y", vertex.point[1])
+            div.append("p").text("Point: ["+vertex.point[0]+","+vertex.point[1]+"]")        
+            div.append("p").text("Parent: ["+vertex.parent.point[0]+","+vertex.parent.point[1]+"]")
+        }
+
+        let stackElement = d3.selectAll(".stack-element");
+        if (stackElement){
+            stackElement.on("mouseover", this.stackMouseOver)
+                        .on("mouseout", this.stackMouseOut);
+        }
+
+    }
+    stackMouseOver(d: any, i: any, n: any): any {
+        let element = d3.select(n[i]);
+        d3.selectAll("rect").each(function() {            
+            let item = d3.select(this);
+            if (+item.attr("cX") == +element.attr("x") && +item.attr("cY") == +element.attr("y"))
+                item.classed("highlight", true);
+        });
+    }
+    stackMouseOut(d: any, i: any, n: any): any {
+        d3.select(".highlight").classed("highlight", false);
+    }
+
     //#region рисование 
     private fill(d: any, i: any, n: any) {
         this.isPenDown = true;
 
-        let c = d3.select(n[i]);
-        var index = this.decryptValue([+c.attr("cX"), +c.attr("cY")]);
-        if (c.style("fill") == CellColor.Black) {
+        let element = d3.select(n[i]);
+        let index = this.decryptValue([+element.attr("cX"), +element.attr("cY")]);
+        if (element.style("fill") == CellColor.Black) {
             this.currentColor = CellColor.Empty;
-            c.style("fill", this.currentColor);
             this.dataMatrix[index] = CellType.Empty;
+            element.style("fill", this.currentColor);
         } else {
             this.currentColor = CellColor.Black;
-            c.style("fill", this.currentColor);
-            this.dataMatrix[index] = CellType.Wall;
+            if(this.transparency == CellType.Wall)
+                this.dataMatrix[index] = CellType.Wall;
+            else this.dataMatrix[index] = this.transparency;
+            element.style("fill", this.currentColor);
+            element.style("opacity", this.transparency);
         }
     }
 
     //перемещение мыши
     private mousemove(d: any, i: any, n: any) {
-        var c = d3.select(n[i])
+        let element = d3.select(n[i])
 
         if (this.isPenDown) {
-            c.style("fill", this.currentColor)
-            var index = this.decryptValue([+c.attr("cX"), +c.attr("cY")]);
-            if (this.currentColor == CellColor.Black)
+            let index = this.decryptValue([+element.attr("cX"), +element.attr("cY")]);
+            if (this.currentColor == CellColor.Black && this.transparency == CellType.Wall)
                 this.dataMatrix[index] = CellType.Wall;
-            else this.dataMatrix[index] = CellType.Empty;
+            else this.dataMatrix[index] = this.transparency;
+            element.style("fill", this.currentColor)
+            element.style("opacity", this.transparency);
         }
     }
 
@@ -250,10 +289,10 @@ export class Grid {
 
     //фиксирование точки
     private dragended(d: any, i: any, n: any) {
-        var end = d3.select(n[i]);
-        var x = +end.attr("x");
-        var y = +end.attr("y");
-        var coord = this.getXY(x, y);
+        let end = d3.select(n[i]);
+        let x = +end.attr("x");
+        let y = +end.attr("y");
+        let coord = this.getXY(x, y);
 
         end.attr("x", coord[0]);
         end.attr("y", coord[1]);

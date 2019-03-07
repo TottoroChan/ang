@@ -4,6 +4,7 @@ import { Astar } from './library/pathfinders/astar';
 import { JPS } from './library/pathfinders/jps';
 import { Wave } from './library/pathfinders/wave';
 import { BFS } from './library/pathfinders/bfs';
+import { Dijkstra } from './library/pathfinders/dijkstra';
 import { CellType } from './library/helper';
 import * as d3 from 'd3';
 import { Player } from './library/player';
@@ -21,8 +22,10 @@ export class AlgorithmComponent {
     algorithmList: [string, string][] = [["astar", "A*"],
     ["wave", "Wave"],
     ["bfs", "BFS"],
-    ["jps", "JPS"]];
+    ["jps", "JPS"],
+    ["dk", "Dijkstra's"]];
     player: Player;
+    speed: 100;
 
     ngOnInit(): void {
         this.disableJPS();
@@ -66,6 +69,9 @@ export class AlgorithmComponent {
             case "bfs":
                 this.algorithm = new BFS(this.gridData, this.isUsingDiagonal, this.player)
                 break;
+            case "dk":
+                this.algorithm = new Dijkstra(this.gridData, this.isUsingDiagonal, this.player)
+                break;
             default:
                 console.log("Some error")
                 break;
@@ -79,13 +85,18 @@ export class AlgorithmComponent {
             if (this.gridData.dataMatrix[i] == this.gridData.dataNeighbour)
                 this.gridData.dataMatrix[i] = CellType.Empty;
         }
+        d3.select("#stack")
+        .selectAll("*")
+        .remove();
     }
 
     play() {
+        console.log(this.gridData.dataMatrix)
+
         this.clean();
         this.chooseAlgorithm();
         this.run()
-        this.player.play();
+        this.player.play(this.speed);
     }
 
     forward() {
