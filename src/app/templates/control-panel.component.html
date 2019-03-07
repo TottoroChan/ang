@@ -1,4 +1,5 @@
 <div id="panel">
+    <alg id="algorithm" [gridData]="grid"></alg>
     <div id="settings">
         <div class="element-grid">
             <div class="element-line"><label>Параметры поля:</label></div>
@@ -23,12 +24,12 @@
                 <input type="number" placeholder="x" id="finishX" min=1 [(ngModel)]="finishPoint[0]">
             </div>
             <div class="element-line"><label>Проходимость клетки: </label>
-                <div class="slidecontainer">
-                    <input type="range" min="10" max="100" step="10"  [(ngModel)]="transparency" (change)="changeTransparency()" class="slider" id="transparency">
+                <div class="slide-container">
+                    <input type="range" min="10" max="100" step="10" [(ngModel)]="transparency"
+                        (change)="changeTransparency()" class="slider" id="transparency">
                 </div>
-            <label>{{transparency}}%</label>
+                <label>{{transparency}}%</label>
+            </div>
         </div>
     </div>
-</div>
-<alg [gridData]="grid"></alg>
 </div>

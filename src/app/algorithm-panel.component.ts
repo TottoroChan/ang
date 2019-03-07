@@ -25,7 +25,6 @@ export class AlgorithmComponent {
     ["jps", "JPS"],
     ["dk", "Dijkstra's"]];
     player: Player;
-    speed: 100;
 
     ngOnInit(): void {
         this.disableJPS();
@@ -79,13 +78,13 @@ export class AlgorithmComponent {
     }
 
     private clean() {
-        d3.selectAll("#pathCell").attr("id", "cell");
+        d3.selectAll("circle").remove();
         d3.selectAll("#neighbourCell").attr("id", "cell");
         for (var i = 0; i < this.gridData.dataMatrix.length; i++) {
             if (this.gridData.dataMatrix[i] == this.gridData.dataNeighbour)
                 this.gridData.dataMatrix[i] = CellType.Empty;
         }
-        d3.select("#stack")
+        d3.select("#stack.wraper")
         .selectAll("*")
         .remove();
     }
@@ -96,7 +95,7 @@ export class AlgorithmComponent {
         this.clean();
         this.chooseAlgorithm();
         this.run()
-        this.player.play(this.speed);
+        this.player.play();
     }
 
     forward() {

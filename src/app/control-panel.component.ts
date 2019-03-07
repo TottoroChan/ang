@@ -25,7 +25,7 @@ export class ControlPanelComponent {
         d3.select("#canvas")
             .selectAll("*")
             .remove();            
-        d3.select("#stack")
+        d3.select("#stack.wraper")
             .selectAll("*")
             .remove();
         
@@ -45,6 +45,6 @@ export class ControlPanelComponent {
     }
 
     changeTransparency(){
-        this.grid.changeTransparency(this.transparency/100);
+        this.grid.changeTransparency(this.transparency);
     }
 }

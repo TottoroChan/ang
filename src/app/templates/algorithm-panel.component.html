@@ -1,16 +1,25 @@
-<div id="player">
-    <label>{{ algorithmId }}</label><br />
-    <div><button id="run" (click)="backward()">(<<)</button>
-    <button id="run" (click)="play()">(>)</button>
-    <button id="run" (click)="stop()">(||)</button>
-    <button id="run" (click)="forward()">(>>)</button>
-    <input type="number" id="speed" min=1  [(ngModel)]="speed"></div>
-    
-</div>
+
 <div id="algorithms">
-    8 <input type="checkbox" [(ngModel)]="isUsingDiagonal" (change)="disableJPS()"><br />
-    <div *ngFor="let option of algorithmList; index as i">
-        <input type="radio" [id]="option[0]" [value]="option[0]" [(ngModel)]="algorithmId" [attr.selected]="i == 0 ? true : null" />
-        <label>{{ option[1] }}</label>
+    <div class="diagonal">
+        <label class="switch">
+            <input class="diagonal" type="checkbox" [(ngModel)]="isUsingDiagonal" (change)="disableJPS()">
+            <span class="slider"></span>
+        </label>
+        <label class="text">Diagonal</label>
+    </div>
+    <div class="algorithm">
+        <label class="container" *ngFor="let option of algorithmList; index as i">
+            <input type="radio" [id]="option[0]" [value]="option[0]" [(ngModel)]="algorithmId"
+                [attr.selected]="i == 0 ? true : null" />
+            <span>{{ option[1] }}</span>
+        </label>
+    </div>
+</div>
+<div id="player">
+    <div class="controls">
+        <input type="button" class="forward" (click)="forward()">
+        <input type="button" class="play" (click)="play()">
+        <input type="button" class="stop" (click)="stop()">
+        <input type="button" class="backward" (click)="backward()">
     </div>
 </div>
