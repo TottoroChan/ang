@@ -25,7 +25,7 @@ export class ControlPanelComponent {
         d3.select("#canvas")
             .selectAll("*")
             .remove();            
-        d3.select("#stack.wraper")
+        d3.select("#stack .wraper")
             .selectAll("*")
             .remove();
         

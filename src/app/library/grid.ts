@@ -120,51 +120,51 @@ export class Grid {
                 }
         });
     }
-    fillResearchedPoint(point:number[]) {
-        d3.selectAll("#cell")
-            .each(function () {
-                var item = d3.select(this);
-                if (+item.attr("cY") * 1 == point[0] && + item.attr("cX") * 1 == point[1]) {
-                    item.attr("class", "researchedPoint");
-                }
-            });
-        d3.selectAll("#neighbourCell")
-            .each(function () {
-                var item = d3.select(this);
-                if (+item.attr("cY") * 1 == point[0] && +item.attr("cX") * 1 == point[1]) {
-                    item.attr("class", "researchedPoint");
-                }
-            });
-    }
-    fillJumpPoints(map: number[][]) {
-        d3.selectAll("#cell")
-            .each(function () {
-                var item = d3.select(this);
-                for (var i = map.length - 1; i >= 0; i--)
-                    if (+item.attr("cY") * 1 == map[i][0] && +item.attr("cX") * 1 == map[i][1]) {
-                        item.attr("id", "jumpPoint");
-                    }
-            });
-        d3.selectAll("#neighbourCell")
-            .each(function () {
-                var item = d3.select(this);
-                for (var i = map.length - 1; i >= 0; i--)
-                    if (+item.attr("cY") * 1 == map[i][0] && +item.attr("cX") * 1 == map[i][1]) {
-                        item.attr("id", "jumpPoint");
-                    }
-            });
-    }
-    fillBestJumpPoint(point: number[]) {
-        d3.selectAll("#jumpPoint")
-            .each(function () {
-                var item = d3.select(this);
-                if (+item.attr("cY") * 1 == point[0] && +item.attr("cX") * 1 == point[1]) {
-                    item.attr("class", "bestJumpPoint");
-                } else {
-                    item.attr("class", "");
-                }
-            });
-    }
+    // fillResearchedPoint(point:number[]) {
+    //     d3.selectAll("#cell")
+    //         .each(function () {
+    //             var item = d3.select(this);
+    //             if (+item.attr("cY") * 1 == point[0] && + item.attr("cX") * 1 == point[1]) {
+    //                 item.attr("class", "researchedPoint");
+    //             }
+    //         });
+    //     d3.selectAll("#neighbourCell")
+    //         .each(function () {
+    //             var item = d3.select(this);
+    //             if (+item.attr("cY") * 1 == point[0] && +item.attr("cX") * 1 == point[1]) {
+    //                 item.attr("class", "researchedPoint");
+    //             }
+    //         });
+    // }
+    // fillJumpPoints(map: number[][]) {
+    //     d3.selectAll("#cell")
+    //         .each(function () {
+    //             var item = d3.select(this);
+    //             for (var i = map.length - 1; i >= 0; i--)
+    //                 if (+item.attr("cY") * 1 == map[i][0] && +item.attr("cX") * 1 == map[i][1]) {
+    //                     item.attr("id", "jumpPoint");
+    //                 }
+    //         });
+    //     d3.selectAll("#neighbourCell")
+    //         .each(function () {
+    //             var item = d3.select(this);
+    //             for (var i = map.length - 1; i >= 0; i--)
+    //                 if (+item.attr("cY") * 1 == map[i][0] && +item.attr("cX") * 1 == map[i][1]) {
+    //                     item.attr("id", "jumpPoint");
+    //                 }
+    //         });
+    // }
+    // fillBestJumpPoint(point: number[]) {
+    //     d3.selectAll("#jumpPoint")
+    //         .each(function () {
+    //             var item = d3.select(this);
+    //             if (+item.attr("cY") * 1 == point[0] && +item.attr("cX") * 1 == point[1]) {
+    //                 item.attr("class", "bestJumpPoint");
+    //             } else {
+    //                 item.attr("class", "");
+    //             }
+    //         });
+    // }
 
     //Поски всех соседей точки 
     getNeighboursId(p: number[], isUsingDiagonal: boolean): number[][] {

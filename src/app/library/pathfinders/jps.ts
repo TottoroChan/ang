@@ -21,7 +21,8 @@ export class JPS extends PathFinder {
             this.bestPoint = this.step();
             this.grid.savePoint(this.bestPoint);
 
-			this.grid.fillBestJumpPoint(this.bestPoint.point);
+			//this.grid.fillBestJumpPoint(this.bestPoint.point);
+            this.grid.fillNeighbour([this.bestPoint.point]);
         } while (!this.grid.checkGoal(this.bestPoint.point));
        
         return this.bestPoint;
@@ -38,8 +39,8 @@ export class JPS extends PathFinder {
                     this.jumpedpoints.push(result);
                 }
             });
-            //this.grid.fillNeighbour(this.jumpedpoints.map(jp => jp.point));
-			this.grid.fillJumpPoints(this.jumpedpoints.map(jp => jp.point));
+            this.grid.fillNeighbour(this.jumpedpoints.map(jp => jp.point));
+			//this.grid.fillJumpPoints(this.jumpedpoints.map(jp => jp.point));
             
             if (this.jumpedpoints.length) {
                 return this.jumpedpoints[0];
@@ -89,8 +90,8 @@ export class JPS extends PathFinder {
     }
 
     getJumpedPoints(point: Vertex): Vertex {
-		this.grid.fillResearchedPoint(point.point);
-        //this.grid.fillNeighbour([point.point]);
+		//this.grid.fillResearchedPoint(point.point);
+        this.grid.fillNeighbour([point.point]);
 
         if (!this.itIsMovmentPoint(point.point)) {
             return null;

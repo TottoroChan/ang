@@ -84,7 +84,7 @@ export class AlgorithmComponent {
             if (this.gridData.dataMatrix[i] == this.gridData.dataNeighbour)
                 this.gridData.dataMatrix[i] = CellType.Empty;
         }
-        d3.select("#stack.wraper")
+        d3.select("#stack .wraper")
         .selectAll("*")
         .remove();
     }
