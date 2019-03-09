@@ -79,6 +79,7 @@ export class AlgorithmComponent {
 
     private clean() {
         d3.selectAll("circle").remove();
+        d3.selectAll("text").remove();
         d3.selectAll("#neighbourCell").attr("id", "cell");
         for (var i = 0; i < this.gridData.dataMatrix.length; i++) {
             if (this.gridData.dataMatrix[i] == this.gridData.dataNeighbour)

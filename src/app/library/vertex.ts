@@ -21,7 +21,7 @@ export class Vertex {
     }
 
     setWeight(weight: number){
-        this.weight = 1 + weight/100;
+        this.weight = weight/100;
     }
 
     setG(start: number[]) {

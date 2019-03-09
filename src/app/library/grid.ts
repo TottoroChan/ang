@@ -114,9 +114,7 @@ export class Grid {
             for (let i = map.length - 1; i >= 0; i--)
                 if (+item.attr("cX") == map[i][0] && +item.attr("cY") == map[i][1]) {
                     item.attr("id", "mainNeighbourCell");
-                    // let index = grid.decryptValue([+item.attr("cX"), +item.attr("cY")]);
-                    // if (grid.dataMatrix[index] == CellType.Empty)
-                    //     grid.dataMatrix[index] = CellType.Neighbour;
+                    item.style("opacity", "");
                 }
         });
     }
@@ -267,14 +265,18 @@ export class Grid {
     //перемещение мыши
     private mousemove(d: any, i: any, n: any) {
         let element = d3.select(n[i])
+        let transparency = 0;
 
         if (this.isPenDown) {
             let index = this.decryptValue([+element.attr("cX"), +element.attr("cY")]);
             if (this.currentColor == CellColor.Black && this.transparency == CellType.Wall)
                 this.dataMatrix[index] = CellType.Wall;
-            else this.dataMatrix[index] = this.transparency;
+            else {
+                this.dataMatrix[index] = this.transparency;
+                transparency = this.transparency/100;
+            }
             element.style("fill", this.currentColor)
-            element.style("opacity", this.transparency / 100);
+            element.style("opacity", transparency == 0 ? "" : transparency);
         }
     }
 
