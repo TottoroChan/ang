@@ -18,7 +18,7 @@ export class ControlPanelComponent {
     list: string[];
     listId: string = "mainList";
     listLength: number = 10;
-    selected: string;
+    selected: number;
 
     constructor(private dialog: MatDialog) { }
 
@@ -69,13 +69,17 @@ export class ControlPanelComponent {
     getGrid() {
         this.clearField();
 
-        let grid = JSON.parse(sessionStorage.getItem(this.selected));
+        let grid = JSON.parse(sessionStorage.getItem(this.list[this.selected]));
         this.heightOfCell = grid.heightOfCell;
         this.workField = grid.workField;
         this.dataMatrix = grid.dataMatrix;
 
         this.grid.createGridFromStorage(grid.heightOfCell, grid.workField, 
             grid.startPoint, grid.finishPoint, grid.dataMatrix);
+    }
+
+    removeItem(){
+        this.list.splice(this.selected, 1)
     }
 
     clearField(){        
