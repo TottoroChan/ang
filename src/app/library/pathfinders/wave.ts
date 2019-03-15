@@ -74,7 +74,7 @@ export class Wave extends PathFinder {
 
     drawWeight(vertex: Vertex) {
         d3.select("svg").append("text")
-            .attr("x", vertex.point[0] * this.grid.heightOfCell + this.grid.heightOfCell / 3)
+            .attr("x", vertex.point[0] * this.grid.heightOfCell + this.grid.heightOfCell / 2)
             .attr("y", vertex.point[1] * this.grid.heightOfCell + this.grid.heightOfCell / 2)
             .attr("dy", ".25em")
             .style("font-size", "15px")

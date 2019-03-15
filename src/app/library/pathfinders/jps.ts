@@ -21,67 +21,136 @@ export class JPS extends PathFinder {
             this.bestPoint = this.step();
             this.grid.savePoint(this.bestPoint);
 
-			//this.grid.fillBestJumpPoint(this.bestPoint.point);
-            this.grid.fillNeighbour([this.bestPoint.point]);
+            this.grid.fillBestJumpPoint(this.bestPoint.point);
+            //this.grid.fillNeighbour([this.bestPoint.point]);
         } while (!this.grid.checkGoal(this.bestPoint.point));
-       
+
         return this.bestPoint;
     }
 
-    step(): Vertex{
+    step(): Vertex {
         this.jumpedpoints = this.jumpedpoints.filter(jp => jp.point != this.bestPoint.point);
-            var neighbours = this.allNeighbourNodes();
-            neighbours.forEach(element => {
-                element.setParent(this.bestPoint)
-                var result = this.getJumpedPoints(element);
-                
-                if (result !== null) {
-                    this.jumpedpoints.push(result);
-                }
-            });
-            this.grid.fillNeighbour(this.jumpedpoints.map(jp => jp.point));
-			//this.grid.fillJumpPoints(this.jumpedpoints.map(jp => jp.point));
-            
-            if (this.jumpedpoints.length) {
-                return this.jumpedpoints[0];
+        var neighbours = this.allNeighbourNodes();
+        neighbours.forEach(element => {
+            element.setParent(this.bestPoint)
+            var result = this.getJumpedPoints(element);
+
+            if (result !== null) {
+                this.jumpedpoints.push(result);
             }
+        });
+        //this.grid.fillNeighbour(this.jumpedpoints.map(jp => jp.point));
+        this.grid.fillJumpPoints(this.jumpedpoints.map(jp => jp.point));
 
-            let bestPoint = this.jumpedpoints[0];
-            this.jumpedpoints.forEach(element => {
-                if (element.h < this.bestPoint.h)
-                    bestPoint = element;
-            });
+        if (this.jumpedpoints.length) {
+            return this.jumpedpoints[0];
+        }
 
-            return bestPoint;
+        let bestPoint = this.jumpedpoints[0];
+        this.jumpedpoints.forEach(element => {
+            if (element.h < this.bestPoint.h)
+                bestPoint = element;
+        });
+
+        return bestPoint;
+    }
+
+    diagonalN(){
+        let neighbors = [];
+        let x = this.bestPoint.point[0];
+        let y = this.bestPoint.point[1];
+        let dx = this.bestPoint.direction[0];
+        let dy = this.bestPoint.direction[1];
+                
+        if (dx !== 0 && dy !== 0) {
+            if (this.itIsMovmentPoint([x, y + dy])) {
+                neighbors.push(new Vertex([x, y + dy], this.bestPoint));
+            }
+            if (this.itIsMovmentPoint([x + dx, y])) {
+                neighbors.push(new Vertex([x + dx, y], this.bestPoint));
+            }
+            if (this.itIsMovmentPoint([x + dx, y + dy])) {
+                neighbors.push(new Vertex([x + dx, y + dy], this.bestPoint));
+            }
+            if (!this.itIsMovmentPoint([x - dx, y])) {
+                neighbors.push(new Vertex([x - dx, y + dy], this.bestPoint));
+            }
+            if (!this.itIsMovmentPoint([x, y - dy])) {
+                neighbors.push(new Vertex([x + dx, y - dy], this.bestPoint));
+            }
+        }
+        else {
+            if(dx === 0) {
+                if (this.itIsMovmentPoint([x, y + dy])) {
+                    neighbors.push(new Vertex([x, y + dy], this.bestPoint));
+                }
+                if (!this.itIsMovmentPoint([x + 1, y])) {
+                    neighbors.push(new Vertex([x + 1, y + dy], this.bestPoint));
+                }
+                if (!this.itIsMovmentPoint([x - 1, y])) {
+                    neighbors.push(new Vertex([x - 1, y + dy], this.bestPoint));
+                }
+            }
+            else {
+                if (this.itIsMovmentPoint([x + dx, y])) {
+                    neighbors.push(new Vertex([x + dx, y], this.bestPoint));
+                }
+                if (!this.itIsMovmentPoint([x, y + 1])) {
+                    neighbors.push(new Vertex([x + dx, y + 1], this.bestPoint));
+                }
+                if (!this.itIsMovmentPoint([x, y - 1])) {
+                    neighbors.push(new Vertex([x + dx, y - 1], this.bestPoint));
+                }
+            }
+        }
+
+        return neighbors;
+    }
+
+    notDiagonalN(){
+        let neighbors = [];
+        let x = this.bestPoint.point[0];
+        let y = this.bestPoint.point[1];
+        let dx = this.bestPoint.direction[0];
+        let dy = this.bestPoint.direction[1];
+
+        if (dx !== 0) {
+            if (this.itIsMovmentPoint([x, y - 1])) {
+                neighbors.push(new Vertex([x, y - 1], this.bestPoint));
+            }
+            if (this.itIsMovmentPoint([x, y + 1])) {
+                neighbors.push(new Vertex([x, y + 1], this.bestPoint));
+            }
+            if (this.itIsMovmentPoint([x + dx, y])) {
+                neighbors.push(new Vertex([x + dx, y], this.bestPoint));
+            }
+        }
+        else if (dy !== 0) {
+            if (this.itIsMovmentPoint([x - 1, y])) {
+                neighbors.push(new Vertex([x - 1, y], this.bestPoint));
+            }
+            if (this.itIsMovmentPoint([x + 1, y])) {
+                neighbors.push(new Vertex([x + 1, y], this.bestPoint));
+            }
+            if (this.itIsMovmentPoint([x, y + dy])) {
+                neighbors.push(new Vertex([x, y + dy], this.bestPoint));
+            }
+        }
+
+        return neighbors;
     }
 
     allNeighbourNodes(): Vertex[] {
         let neighbours: Vertex[] = [];
-        
+
         if (this.bestPoint.parent == null) {
-           neighbours = this.grid.neighbourNodes(this.bestPoint, this.isUsingDiagonal);
+            neighbours = this.grid.neighbourNodes(this.bestPoint, this.isUsingDiagonal);
         }
+
         else {
-            if (this.itIsMovmentPoint([this.bestPoint.point[0] + this.bestPoint.direction[0], this.bestPoint.point[1] + this.bestPoint.direction[1]])
-                && this.isUsingDiagonal) {
-                neighbours.push(new Vertex([this.bestPoint.point[0] + this.bestPoint.direction[0], this.bestPoint.point[1] + this.bestPoint.direction[1]], this.bestPoint));
-            }
-            
-            if (this.bestPoint.direction[0] != 0 && this.bestPoint.direction[1] != 0 && this.isUsingDiagonal) {
-                if (this.itIsMovmentPoint([this.bestPoint.point[0], this.bestPoint.point[1] + this.bestPoint.direction[1]])) {
-                    neighbours.push(new Vertex([this.bestPoint.point[0], this.bestPoint.point[1] + this.bestPoint.direction[1]], this.bestPoint));
-                }
-                
-                if (this.itIsMovmentPoint([this.bestPoint.point[0] + this.bestPoint.direction[0], this.bestPoint.point[1]])) {
-                    neighbours.push(new Vertex([this.bestPoint.point[0] + this.bestPoint.direction[0], this.bestPoint.point[1]], this.bestPoint));
-                }
-            }
-            
-            let forcedNeighbours = this.findForcedNeighbour(this.bestPoint);
-            forcedNeighbours.forEach(element => {
-                neighbours.push(new Vertex(element, this.bestPoint));
-            });
+            neighbours = this.isUsingDiagonal ? this.diagonalN() : this.notDiagonalN();
         }
+
         neighbours.forEach(element => {
             element.setH(this.isUsingDiagonal, this.grid.finishPoint);
         });
@@ -90,68 +159,100 @@ export class JPS extends PathFinder {
     }
 
     getJumpedPoints(point: Vertex): Vertex {
-		//this.grid.fillResearchedPoint(point.point);
-        this.grid.fillNeighbour([point.point]);
+        this.grid.fillResearchedPoint(point.point);
+        //this.grid.fillNeighbour([point.point]);
 
         if (!this.itIsMovmentPoint(point.point)) {
             return null;
         }
-        
+
         if (this.grid.checkGoal(point.point)) {
             return point;
         }
-        
+
         if (point.parent != null && this.findForcedNeighbour(point).length) {
             return point;
         }
-        
-        if (point.direction[0] != 0 && point.direction[1] != 0 && this.isUsingDiagonal) {
-            var n1 = [point.point[0], point.point[1] + point.direction[1]];
-            var n2 = [point.point[0] + point.direction[0], point.point[1]];
-            if (this.itIsMovmentPoint(n1) && this.getJumpedPoints(new Vertex(n1, point)) != null)
-                return point;
-            
-            if (this.itIsMovmentPoint(n2) && this.getJumpedPoints(new Vertex(n2, point)) != null)
-                return point;
+
+        let x = point.point[0];
+        let y = point.point[1];
+        let dx = point.direction[0];
+        let dy = point.direction[1];
+
+        if (this.isUsingDiagonal) {
+            if (dx != 0 && dy != 0) {
+                let neighbour1 = [x, y + dy];
+                let neighbour2 = [x + dx, y];
+
+                if (this.itIsMovmentPoint(neighbour1) && this.getJumpedPoints(new Vertex(neighbour1, point)) != null)
+                    return point;
+
+                if (this.itIsMovmentPoint(neighbour2) && this.getJumpedPoints(new Vertex(neighbour2, point)) != null)
+                    return point;
+            }
+        }
+        else {
+            if (dx !== 0) {
+                if ((this.itIsMovmentPoint([x, y - 1]) && !this.itIsMovmentPoint([x - dx, y - 1])) ||
+                    (this.itIsMovmentPoint([x, y + 1]) && !this.itIsMovmentPoint([x - dx, y + 1]))) {
+                    return point;
+                }
+            }
+            else if (dy !== 0) {
+                let neighbour1 = [x - 1, y];
+                let neighbour2 = [x + 1, y];
+                if ((this.itIsMovmentPoint(neighbour1) && !this.itIsMovmentPoint([x - 1, y - dy])) ||
+                    (this.itIsMovmentPoint(neighbour2) && !this.itIsMovmentPoint([x + 1, y - dy]))) {
+                    return point;
+                }
+                //When moving vertically, must check for horizontal jump points
+                if (this.getJumpedPoints(new Vertex(neighbour1, point)) || this.getJumpedPoints(new Vertex(neighbour2, point))) {
+                    return point;
+                }
+            }
+            else {
+                throw new Error("Only horizontal and vertical movements are allowed");
+            }
         }
 
-        var jump = new Vertex([point.point[0] + point.direction[0], point.point[1] + point.direction[1]], point);
+        let jump = new Vertex([x + dx, y + dy], point);
         jump.setH(this.isUsingDiagonal, this.grid.finishPoint);
-        
+
         return this.getJumpedPoints(jump);
     }
 
     findForcedNeighbour(point: Vertex) {
         let set = [];
-        if (point.direction[0] != 0 && point.direction[1] != 0 && this.isUsingDiagonal) {
-            if (!this.itIsMovmentPoint([point.parent.point[0], point.parent.point[1] + point.direction[1]])
-                && this.itIsMovmentPoint([point.point[0] - point.direction[0], point.point[1] + point.direction[1]]))
-                set.push([point.point[0] - point.direction[0], point.point[1] + point.direction[1]]);
-            if (!this.itIsMovmentPoint([point.parent.point[0] + point.direction[0], point.parent.point[1]])
-                && this.itIsMovmentPoint([point.point[0] + point.direction[0], point.point[1] - point.direction[1]]))
-                set.push([point.point[0] + point.direction[0], point.point[1] - point.direction[1]]);
+        let x = point.point[0];
+        let y = point.point[1];
+        let px = point.parent.point[0];
+        let py = point.parent.point[1];
+        let dx = point.direction[0];
+        let dy = point.direction[1];
+
+        if (dx != 0 && dy != 0 && this.isUsingDiagonal) {
+            if (!this.itIsMovmentPoint([px, py + dy]) && this.itIsMovmentPoint([x - dx, y + dy]))
+                set.push([x - dx, y + dy]);
+            if (!this.itIsMovmentPoint([px + dx, py]) && this.itIsMovmentPoint([x + dx, y - dy]))
+                set.push([x + dx, y - dy]);
         }
         else {
-            if (point.direction[0] == 0) {
-                if (!this.itIsMovmentPoint([point.parent.point[0] - 1, point.parent.point[1] + point.direction[1]])
-                    && this.itIsMovmentPoint([point.point[0] - 1, point.point[1] + point.direction[1]]))
-                    set.push([point.point[0] - 1, point.point[1] + point.direction[1]]);
-               
-                if (!this.itIsMovmentPoint([point.parent.point[0] + 1, point.parent.point[1] + point.direction[1]])
-                    && this.itIsMovmentPoint([point.point[0] + 1, point.point[1] + point.direction[1]]))
-                    set.push([point.point[0] + 1, point.point[1] + point.direction[1]]);
+            if (dx == 0) {
+                if (!this.itIsMovmentPoint([px - 1, py + dy]) && this.itIsMovmentPoint([x - 1, y + dy]))
+                    set.push([x - 1, y + dy]);
+
+                if (!this.itIsMovmentPoint([px + 1, py + dy]) && this.itIsMovmentPoint([x + 1, y + dy]))
+                    set.push([x + 1, y + dy]);
             }
             else {
-                if (!this.itIsMovmentPoint([point.parent.point[0] + point.direction[0], point.parent.point[1] - 1])
-                    && this.itIsMovmentPoint([point.point[0] + point.direction[0], point.point[1] - 1]))
-                    set.push([point.point[0] + point.direction[0], point.point[1] - 1]);
-                
-                if (!this.itIsMovmentPoint([point.parent.point[0] + point.direction[0], point.parent.point[1] + 1])
-                    && this.itIsMovmentPoint([point.point[0] + point.direction[0], point.point[1] + 1]))
-                    set.push([point.point[0] + point.direction[0], point.point[1] + 1]);
+                if (!this.itIsMovmentPoint([px + dx, py - 1]) && this.itIsMovmentPoint([x + dx, y - 1]))
+                    set.push([x + dx, y - 1]);
+
+                if (!this.itIsMovmentPoint([px + dx, py + 1]) && this.itIsMovmentPoint([x + dx, y + 1]))
+                    set.push([x + dx, y + 1]);
             }
         }
-        
+
         return set;
     }
 

@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import * as d3 from "d3";
 import { Grid } from './library/grid';
+import { MatDialog, MatDialogConfig } from '@angular/material';
+import { DialogComponent } from './dialog.component';
 
 @Component({
     selector: 'ctrl-panel',
@@ -10,41 +12,78 @@ import { Grid } from './library/grid';
 export class ControlPanelComponent {
     heightOfCell: number = 30;
     workField: number[] = [10, 10];
-    startPoint: number[] = [9, 9];
-    finishPoint: number[] = [0, 0];
     transparency: number = 100;
+    dataMatrix: Uint8Array;
     grid: any;
+    list: string[];
+    listId: string = "mainList";
+    listLength: number = 10;
+    selected: string;
 
+    constructor(private dialog: MatDialog) { }
 
     ngOnInit(): void {
-        this.grid = new Grid(this.heightOfCell, this.workField, this.startPoint, this.finishPoint);
+        if (sessionStorage.getItem(this.listId) == null)
+            this.list = [];
+        else this.list =  sessionStorage.getItem(this.listId).split(",");
+        this.grid = new Grid(this.heightOfCell, this.workField);
         this.grid.createGrid();
     }
 
     redrawField(): void {
-        d3.select("#canvas")
-            .selectAll("*")
-            .remove();            
-        d3.select("#stack .wraper")
-            .selectAll("*")
-            .remove();
-        
+        this.clearField();
 
-        if (this.startPoint[0] > this.workField[0])
-            this.startPoint[0] = this.workField[0] -1;
-        if (this.startPoint[1] > this.workField[1])
-            this.startPoint[1] = this.workField[1] -1;
-        if (this.finishPoint[0] > this.workField[0])
-            this.finishPoint[0] = this.workField[0] -1;
-        if (this.finishPoint[1] > this.workField[1])
-            this.finishPoint[1] = this.workField[1] -1;
-
-        this.grid = new Grid(this.heightOfCell, this.workField, this.startPoint, this.finishPoint);
+        this.grid = new Grid(this.heightOfCell, this.workField);
         console.log(this.grid)
         this.grid.createGrid();
     }
 
-    changeTransparency(){
+    changeTransparency() {
         this.grid.changeTransparency(this.transparency);
+    }
+
+    openPopup() {
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.autoFocus = true;
+        dialogConfig.width = "500px";
+        dialogConfig.height = "200px";
+        dialogConfig.disableClose = true;
+        dialogConfig.data = "";
+
+        const dialogRef = this.dialog.open(DialogComponent, dialogConfig);
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result.length > 0)
+                this.saveGrid(result);               
+
+        });
+    }
+
+    saveGrid(key: string) {
+        this.dataMatrix = this.grid.dataMatrix;
+        sessionStorage.setItem(this.listId, this.list.toString());
+        sessionStorage.setItem(key, JSON.stringify(this.grid));
+        this.list.push(key);
+    }
+
+    getGrid() {
+        this.clearField();
+
+        let grid = JSON.parse(sessionStorage.getItem(this.selected));
+        this.heightOfCell = grid.heightOfCell;
+        this.workField = grid.workField;
+        this.dataMatrix = grid.dataMatrix;
+
+        this.grid.createGridFromStorage(grid.heightOfCell, grid.workField, 
+            grid.startPoint, grid.finishPoint, grid.dataMatrix);
+    }
+
+    clearField(){        
+        d3.select("#canvas")
+            .selectAll("*")
+            .remove();
+        d3.select("#stack .wraper")
+            .selectAll("*")
+            .remove();
     }
 }

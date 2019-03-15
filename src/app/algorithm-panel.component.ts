@@ -26,22 +26,6 @@ export class AlgorithmComponent {
     ["dk", "Dijkstra's"]];
     player: Player;
 
-    ngOnInit(): void {
-        this.disableJPS();
-    }
-
-    disableJPS(): any {
-        let jps = d3.select("#jps");
-        if (this.isUsingDiagonal) {
-            jps.property("disabled", false);
-
-        }
-        else {
-            jps.property("disabled", true);
-            this.algorithmId = "astar"
-        }
-    }
-
     run() {
         if (this.algorithm != null) {
             this.algorithm.work()
@@ -81,6 +65,8 @@ export class AlgorithmComponent {
         d3.selectAll("circle").remove();
         d3.selectAll("text").remove();
         d3.selectAll("#neighbourCell").attr("id", "cell");
+        d3.selectAll("#jumpPoint").attr("id", "cell");
+
         for (var i = 0; i < this.gridData.dataMatrix.length; i++) {
             if (this.gridData.dataMatrix[i] == this.gridData.dataNeighbour)
                 this.gridData.dataMatrix[i] = CellType.Empty;

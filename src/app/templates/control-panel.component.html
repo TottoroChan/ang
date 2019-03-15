@@ -1,20 +1,33 @@
 <div id="panel">
     <alg id="algorithm" [gridData]="grid"></alg>
     <div id="settings">
+        <div class="element-buttons">
+            <button (click)="redrawField()">нарисовать</button>
+            <button mat-button (click)="openPopup()">сохранить</button>
+            <select [(ngModel)]="selected">
+                <option *ngFor="let item of list" value="{{item}}">{{item}}</option>
+            </select>
+            <button mat-button (click)="getGrid()">загрузить</button>
+        </div>
         <div class="element-grid">
             <div class="element-line"><label>Параметры поля:</label></div>
             <div class="element-line"><label>Размер клетки: </label>
                 <input type="number" placeholder="h" id="fieldH" step=10 min=10 [(ngModel)]="heightOfCell">
             </div>
             <div class="element-line"><label>Ширина: </label>
-                <input type="number" placeholder="rows" id="fieldR" min=10 [(ngModel)]="workField[0]">
+                <input type="number" placeholder="rows" id="fieldR" min=2 [(ngModel)]="workField[0]">
             </div>
             <div class="element-line"><label>Высота: </label>
-                <input type="number" placeholder="colums" id="fieldC" min=10 [(ngModel)]="workField[1]">
+                <input type="number" placeholder="colums" id="fieldC" min=2 [(ngModel)]="workField[1]">
             </div>
-            <button (click)="redrawField()">нарисовать</button>
+            <div class="element-line"><label>Проходимость клетки: {{transparency}}%</label>
+                <div class="slide-container">
+                    <input type="range" min="10" max="100" step="10" [(ngModel)]="transparency"
+                        (change)="changeTransparency()" class="slider" id="transparency">
+                </div>
+            </div>
         </div>
-        <div class="element-points">
+        <!-- <div class="element-points">
             <div class="element-line"><label>Точка старта</label>
                 <input type="number" placeholder="y" id="startY" min=1 [(ngModel)]="startPoint[1]">
                 <input type="number" placeholder="x" id="startX" min=1 [(ngModel)]="startPoint[0]">
@@ -23,13 +36,6 @@
                 <input type="number" placeholder="y" id="finishY" min=1 [(ngModel)]="finishPoint[1]">
                 <input type="number" placeholder="x" id="finishX" min=1 [(ngModel)]="finishPoint[0]">
             </div>
-            <div class="element-line"><label>Проходимость клетки: </label>
-                <div class="slide-container">
-                    <input type="range" min="10" max="100" step="10" [(ngModel)]="transparency"
-                        (change)="changeTransparency()" class="slider" id="transparency">
-                </div>
-                <label>{{transparency}}%</label>
-            </div>
-        </div>
+        </div> -->
     </div>
 </div>
