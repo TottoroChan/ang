@@ -78,6 +78,4 @@ typings/
 # Dependency directories
 node_modules/
 jspm_packages/
-public/script/
-public/css/
 .firebase/
