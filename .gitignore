@@ -32,12 +32,6 @@ bower_components
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 build/Release
 
-# Dependency directories
-node_modules/
-jspm_packages/
-public/
-.firebase/
-
 # TypeScript v1 declaration files
 typings/
 
@@ -80,3 +74,10 @@ typings/
 
 # DynamoDB Local files
 .dynamodb/
+
+# Dependency directories
+node_modules/
+jspm_packages/
+public/script/
+public/css/
+.firebase/
