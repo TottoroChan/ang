@@ -42,10 +42,6 @@ export class JPS extends PathFinder {
         //this.grid.fillNeighbour(this.jumpedpoints.map(jp => jp.point));
         this.grid.fillJumpPoints(this.jumpedpoints.map(jp => jp.point));
 
-        if (this.jumpedpoints.length) {
-            return this.jumpedpoints[0];
-        }
-
         let bestPoint = this.jumpedpoints[0];
         this.jumpedpoints.forEach(element => {
             if (element.h < this.bestPoint.h)
@@ -170,7 +166,7 @@ export class JPS extends PathFinder {
             return point;
         }
 
-        if (point.parent != null && this.findForcedNeighbour(point).length) {
+        if (this.isUsingDiagonal && point.parent != null && this.findForcedNeighbour(point).length) {
             return point;
         }
 

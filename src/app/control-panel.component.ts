@@ -17,7 +17,6 @@ export class ControlPanelComponent {
     grid: any;
     list: string[];
     listId: string = "mainList";
-    listLength: number = 10;
     selected: number;
 
     constructor(private dialog: MatDialog) { }
@@ -61,9 +60,10 @@ export class ControlPanelComponent {
 
     saveGrid(key: string) {
         this.dataMatrix = this.grid.dataMatrix;
-        sessionStorage.setItem(this.listId, this.list.toString());
         sessionStorage.setItem(key, JSON.stringify(this.grid));
+
         this.list.push(key);
+        sessionStorage.setItem(this.listId, this.list.toString());
     }
 
     getGrid() {

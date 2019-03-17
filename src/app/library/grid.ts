@@ -251,7 +251,7 @@ export class Grid {
     }
 
     savePoint(vertex: Vertex) {
-        if (vertex.parent != null) {
+        if (vertex.parent != null && !this.checkGoal(vertex.point)) {
             let div = d3.select("#stack .wraper").append("div")
                                 .attr('class', "stack-element")
                                 .attr("x", vertex.point[0])

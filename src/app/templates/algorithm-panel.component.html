@@ -1,25 +1,13 @@
-
-<div id="algorithms">
-    <div class="diagonal">
-        <label class="switch">
-            <input class="diagonal" type="checkbox" [(ngModel)]="isUsingDiagonal">
-            <span class="slider"></span>
-        </label>
-        <label class="text">Diagonal</label>
-    </div>
-    <div class="algorithm">
-        <label class="container" *ngFor="let option of algorithmList; index as i">
-            <input type="radio" [id]="option[0]" [value]="option[0]" [(ngModel)]="algorithmId"
-                [attr.selected]="i == 0 ? true : null" />
-            <span>{{ option[1] }}</span>
-        </label>
-    </div>
+<div class="controls">
+    <button mat-stroked-button (click)="backward()"><span class="backward"></span></button>
+    <button mat-stroked-button (click)="play()"><span class="play"></span></button>
+    <button mat-stroked-button (click)="stop()"><span class="stop"></span></button>
+    <button mat-stroked-button (click)="forward()"><span class="forward"></span></button>
 </div>
-<div id="player">
-    <div class="controls">
-        <input type="button" class="forward" (click)="forward()">
-        <input type="button" class="play" (click)="play()">
-        <input type="button" class="stop" (click)="stop()">
-        <input type="button" class="backward" (click)="backward()">
-    </div>
+<div class="algorithm">
+    <mat-button-toggle-group name="algorithm" [(value)]="algorithmId" #group="matButtonToggleGroup">
+        <mat-button-toggle *ngFor="let option of algorithmList; index as i" [(value)]="option[0]">{{ option[1] }}
+        </mat-button-toggle>
+    </mat-button-toggle-group>
+    <mat-slide-toggle color="primary" [(ngModel)]="isUsingDiagonal">использовать диагонали</mat-slide-toggle>
 </div>

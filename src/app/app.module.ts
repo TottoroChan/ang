@@ -5,7 +5,10 @@ import { GridComponent } from './grid.component';
 import { ControlPanelComponent } from './control-panel.component';
 import { AlgorithmComponent } from './algorithm-panel.component';
 import { DialogComponent } from './dialog.component';
-import { MatDialogModule } from '@angular/material';
+import { MatDialogModule, MatToolbarModule, MatButtonToggleModule,
+    MatSlideToggleModule, MatButtonModule, MatCardModule, 
+    MatInputModule, MatSliderModule, MatSelectModule,
+    MatIconModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
@@ -14,6 +17,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         FormsModule,
         BrowserAnimationsModule,
         MatDialogModule,
+        MatToolbarModule,
+        MatButtonToggleModule,
+        MatSlideToggleModule,
+        MatButtonModule,
+        MatCardModule,
+        MatInputModule,
+        MatSliderModule,
+        MatSelectModule,
+        MatIconModule
     ],
     declarations: [
         GridComponent,
