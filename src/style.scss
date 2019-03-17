@@ -103,7 +103,7 @@ input {
 }
 
 .remove{
-  background-image: url(/public/images/remove.svg);
+  background-image: url(/images/remove.svg);
   padding: 3px 12px;
   background-position: center;
   background-repeat: no-repeat;
@@ -118,18 +118,17 @@ input {
   padding: 3px 12px;
 }
 .play{
-  background-image: url(/public/images/play.svg);
+  background-image: url(/images/play.svg);
 }
 .stop{
-  background-image: url(/public/images/stop.svg);
+  background-image: url(/images/stop.svg);
 }
 .forward{
-  background-image: url(/public/images/forward.svg);
+  background-image: url(/images/forward.svg);
 }
 .backward{
-  background-image: url(/public/images/backward.svg);
+  background-image: url(/images/backward.svg);
 }
-
 /* fill */
 
 #cell {
