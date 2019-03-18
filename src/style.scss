@@ -148,7 +148,7 @@ input {
 }
 
 #mainNeighbourCell {
-  fill: #72d189;
+  fill: #b6ffb6 !important;
 }
 
 #cell.researchedPoint, #neighbourCell.researchedPoint {
@@ -183,4 +183,9 @@ rect {
 
 .highlight {
   fill: #3f51b5 !important;
+  opacity: 1 !important;
+}
+
+text{
+  font-size: 15px;
 }

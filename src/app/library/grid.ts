@@ -151,7 +151,6 @@ export class Grid {
             for (let i = map.length - 1; i >= 0; i--)
                 if (+item.attr("cX") == map[i][0] && +item.attr("cY") == map[i][1]) {
                     item.attr("id", "mainNeighbourCell");
-                    item.style("opacity", "");
                 }
         });
     }
@@ -310,12 +309,12 @@ export class Grid {
             if (this.currentColor == CellColor.Black){
                 this.dataMatrix[index] = this.transparency;
                 transparency = this.transparency/100;
+                element.style("opacity", transparency == 0 ? "" : transparency);
             }
             else {
                 this.dataMatrix[index] = CellType.Empty;
             }
             element.style("fill", this.currentColor)
-            element.style("opacity", transparency == 0 ? "" : transparency);
         }
     }
 
