@@ -1,0 +1,38 @@
+<mat-toolbar role="heading" id="panel">
+    <mat-toolbar-row>
+        <algorithms id="algorithm"></algorithms>
+    </mat-toolbar-row>
+    <mat-toolbar-row>
+        <div id="settings">
+            <div class="field">
+                <button mat-stroked-button (click)="redrawField()">нарисовать</button>
+                <mat-form-field>
+                    <input matInput type="number" step=10 min=10 [(ngModel)]="height" placeholder="размер клетки">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput type="number" step=10 min=10 [(ngModel)]="fieldSize[0]" placeholder="ширина">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput type="number" step=10 min=10 [(ngModel)]="fieldSize[1]" placeholder="высота">
+                </mat-form-field>
+                <div class="transparency">
+                    <label>Проходимость клетки: {{transparency}}%</label>
+                    <mat-slider color="primary" tickInterval="10" step="10" min="10" max="100"
+                        [(ngModel)]="transparency" (change)="changeTransparency()"></mat-slider>
+                </div>
+            </div>
+            <div class="history">
+                <button mat-stroked-button (click)="openPopup()">сохранить</button>
+
+                <mat-form-field>
+                    <mat-select placeholder="select" [(ngModel)]="selected">
+                        <mat-option *ngFor="let item of list; index as i" [value]="i">
+                            {{item}}
+                        </mat-option>
+                    </mat-select><span class="remove" (click)="removeItem()"></span>
+                </mat-form-field>
+                <button mat-stroked-button (click)="getGrid()">загрузить</button>
+            </div>
+        </div>
+    </mat-toolbar-row>
+</mat-toolbar>

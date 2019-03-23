@@ -1,0 +1,191 @@
+@import '../node_modules/@angular/material/prebuilt-themes/indigo-pink.css';
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+input {
+  width: 70px;
+  float: right;
+}
+
+#algorithm,
+#settings {
+ display:contents;
+}
+#algorithm .controls,
+#algorithm .algorithm,
+#settings .field,
+#settings .saving{
+  margin-right: 10px;
+}
+#algorithm .controls button{
+  margin-right: 5px;
+}
+#algorithm .algorithm mat-button-toggle-group{
+  margin: 0 10px;  
+}
+
+#settings .field {
+    display: contents;
+}
+#settings .field .mat-form-field-infix{
+  width: 130px;
+  height: 10px;
+}
+#settings .field .mat-form-field{
+  margin: 0px 5px;
+}
+#settings .field .transparency{
+  margin: 0 5px;
+  width: 190px;
+}
+#settings .field .transparency label{
+  display: block;
+  font-size: 14px;
+}
+#settings .field .transparency mat-slider{
+  width: 180px;
+}
+#settings .history button{
+  margin: 0px 10px;
+}
+#settings .history mat-select{
+  width: 150px
+}
+
+#canvas {
+  text-align: center;
+  margin: 10px auto;
+}
+
+#stack {
+  height: 100px;
+  bottom: 0px;
+  left: 0px;
+  padding: 5px;
+  position: absolute;
+  width: 100%;
+  padding-top: 5px;
+}
+
+#stack .wraper {
+  height: 100%;
+  position: relative;
+  width: 99%;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+#stack .wraper .stack-element {
+  display: inline-block;
+  border: 1px solid #616161;
+  border-radius: 10px;
+  height: 85px;
+  width: 85px;
+  margin: 2px;
+  text-align: center;
+  background: #e5e3e3;
+  font-size: 15px;
+  line-height: 12px;
+}
+
+#stack .wraper .stack-element:hover {
+  background: #3f51b5;
+  color: white;
+}
+
+#panel {
+  font-size: 17px;
+  line-height: 12px;
+}
+
+.remove{
+  background-image: url(/images/remove.svg);
+  padding: 3px 12px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.play,
+.stop,
+.forward,
+.backward{
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 3px 12px;
+}
+.play{
+  background-image: url(/images/play.svg);
+}
+.stop{
+  background-image: url(/images/stop.svg);
+}
+.forward{
+  background-image: url(/images/forward.svg);
+}
+.backward{
+  background-image: url(/images/backward.svg);
+}
+/* fill */
+
+#cell {
+  fill: white;
+}
+
+#pathCell {
+  fill: #25ed4a;
+}
+
+#neighbourCell {
+  fill: #b6ffb6;
+}
+
+#currentpoint {
+  fill: #bda000;
+}
+
+#mainNeighbourCell {
+  fill: #b6ffb6;
+}
+
+#cell.researchedPoint, #neighbourCell.researchedPoint {
+  fill: #e0e0e0;
+}
+
+#jumpPoint {
+  fill: #eeed94;
+}
+
+#jumpPoint.bestJumpPoint {
+  fill: #63ccc1;
+}
+
+rect {
+  stroke: black;
+  stroke-width: 0.25px;
+}
+
+#start {
+  fill: #00AA00;
+}
+
+#finish {
+  fill: #AA0000;
+}
+
+.active {
+  stroke: black;
+  stroke-width: 2px;
+}
+
+.highlight {
+  fill: #3f51b5 !important;
+  opacity: 1 !important;
+}
+
+text{
+  font-size: 15px;
+}
