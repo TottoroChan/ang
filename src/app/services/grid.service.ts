@@ -15,11 +15,17 @@ export class GridService {
     private _height: number = 30;
     private _data: Uint8Array;
     private _fromStorage = false;
+    workIsFinished: Subject<any> = new Subject(); 
     trancparencyChanged: Subject<any> = new Subject(); 
     gridChanged: Subject<any> = new Subject(); 
 
     constructor() {
         this._data = new Uint8Array(this._fieldSize[0] * this._fieldSize[1]);
+    }
+
+
+    finish(path: number[][]){
+        this.workIsFinished.next(path);
     }
 
     changeTransparency(transparency: number): any {

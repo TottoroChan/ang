@@ -28,11 +28,8 @@ export class AlgorithmsComponent {
         if (this.algorithm != null) {
             this.algorithm.work()
                 .then(result => { 
-                    return this.algorithm.reconstructPath(result) 
-                })
-                .then(path => {
+                    this.algorithm.reconstructPath(result) 
                     this.algorithm = null;
-                    this.playerService.finish(path);
                 });
             ;
         }

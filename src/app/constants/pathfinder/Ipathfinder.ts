@@ -21,8 +21,9 @@ export abstract class IPathFinder {
         while (node != null) {
             path.push(node.point)
             node = node.parent;
-        }
-        return path;
+        }        
+        this.gridService.finish(path);
+        //return path;
     }
 
     vertexisExist(set: Vertex[], vertex: Vertex): boolean {

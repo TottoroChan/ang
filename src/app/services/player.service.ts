@@ -7,18 +7,17 @@ import { first } from 'rxjs/operators';
 })
 
 export class PlayerService {
-    isFinished: Subject<any> = new Subject(); 
+    isFinished: Subject<any> = new Subject();
     subject: Subject<{}>;
     player: Subscription;
     previous: this;
-
 
     constructor() {
         this.subject = new Subject();
     }
 
     play() {
-        this.player = interval(80).subscribe(this.subject);
+        this.player = interval(70).subscribe(this.subject);
     }
 
     forward() {
@@ -36,9 +35,5 @@ export class PlayerService {
 
     whait(): Promise<{}> {
         return this.subject.pipe(first()).toPromise()
-    }
-
-    finish(path: number[][]){
-        this.isFinished.next(path);
     }
 }

@@ -16,7 +16,7 @@ export class GridComponent {
     transparency: number;
 
     constructor(private gridService: GridService,private playerService: PlayerService ) {
-        this.playerService.isFinished.subscribe(value => {
+        this.gridService.workIsFinished.subscribe(value => {
               this.fillPath(value); 
             }); 
         this.gridService.trancparencyChanged.subscribe(value => {
