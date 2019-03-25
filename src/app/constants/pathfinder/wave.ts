@@ -85,11 +85,12 @@ export class Wave extends IPathFinder {
     rebuldPath(goal: Vertex) {
         if (this.visited[this.gridService.toIndex(goal.point)] != 0) {
             let neighbours = this.gridService.neighbourNodes(goal, this.isUsingDiagonal);
-            let minD = this.visited[this.gridService.toIndex(neighbours[0].point)];
+            let minD = this.visited[this.gridService.toIndex(goal.point)];
             let parent = neighbours[0];
 
             neighbours.forEach(node => {
-                if (this.visited[this.gridService.toIndex(node.point)] < minD){
+                let d = this.visited[this.gridService.toIndex(node.point)]
+                if (d!=null && d < minD){
                     minD = this.visited[this.gridService.toIndex(node.point)];
                     parent = node;                    
                 }
