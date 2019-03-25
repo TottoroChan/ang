@@ -14,7 +14,6 @@ export class Astar extends IPathFinder {
     constructor(isUsingDiagonal: boolean, playerService: PlayerService, 
         gridService: GridService, stackService: StackService ) {        
         super(isUsingDiagonal, playerService, gridService, stackService);
-        this.betterValue = false;
         this.openSet = []; // Множество вершин, которые предстоит изучить.
         this.resultSet = []; // Множество изученых вершин
 
@@ -62,11 +61,12 @@ export class Astar extends IPathFinder {
         return null;
     }
 
-    checkNeighbours(neighbour: Vertex, vertex: Vertex): any {
+    checkNeighbours(neighbour: Vertex, vertex: Vertex): any {        
+        let betterValue = false;
         if (this.vertexisExist(this.resultSet, neighbour)) //если уже есть в списке
             return;
         
-        let g_score = vertex.g + vertex.pathTo(neighbour.point); //g для обрабатываеиого соседа
+        let g_score = vertex.g + vertex.pathTo(neighbour); //g для обрабатываеиого соседа
         let node = this.getVertex(this.openSet, neighbour);
         
         if (node == null) { //соседа нет в списке
@@ -74,7 +74,7 @@ export class Astar extends IPathFinder {
             neighbour.setH(this.isUsingDiagonal, this.gridService.finishPoint);
             neighbour.setF();
             this.openSet.push(neighbour);
-            this.betterValue = true; // лучший сосед
+            betterValue = true; // лучший сосед
 
             node = neighbour;
             
@@ -82,12 +82,12 @@ export class Astar extends IPathFinder {
         }
         else { //сосед уже есть в списке
             if (g_score < node.g)
-                this.betterValue = true; //необходимо обновить значения
+                betterValue = true; //необходимо обновить значения
             else
-                this.betterValue = false;
+                betterValue = false;
         }
         
-        if (this.betterValue) { // обновление значений
+        if (betterValue) { // обновление значений
             node.parent = vertex;
             node.g = g_score;
             node.setH(this.isUsingDiagonal, this.gridService.finishPoint);

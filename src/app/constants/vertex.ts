@@ -15,13 +15,14 @@ export class Vertex {
         this.point = point; // координата
         this.parent = parent;
         this.isWall = false;
+        this.weight = 1;
         if (parent != null) {
             this.direction = [point[0] - parent.point[0], point[1] - parent.point[1]]
         }
     }
 
     setWeight(weight: number){
-        this.weight = weight/100 + 1;
+        this.weight+= weight/100;
     }
 
     setG(start: number[]) {
@@ -38,7 +39,7 @@ export class Vertex {
     }
 
     setF() {
-        this.f = this.g + this.f;
+        this.f = this.g + this.h + this.weight - 1;
     }
 
     setD(d: number) {
@@ -56,8 +57,8 @@ export class Vertex {
         else this.isWall = true;
     }
 
-    pathTo(point: number[]): number {
-        return Math.abs(point[0] - this.point[0]) + Math.abs(point[1] - this.point[1]);
+    pathTo(neighbour: Vertex): number {
+        return Math.abs(neighbour.point[0] - this.point[0]) + Math.abs(neighbour.point[1] - this.point[1])+neighbour.weight-1;
     }
 
 }
