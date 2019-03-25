@@ -44,16 +44,18 @@ export abstract class IPathFinder {
         return null;
     }
 
-    setStackData(array: Vertex[]){  
+    async setStackData(array: Vertex[]){  
         d3.select("#stack .wraper")
             .selectAll("*")
             .remove();
 
         this.stackService.updateStack(array);
+
+        await this.playerService.whait();
     }
 
 
-    fillNeighbour(map: number[][]) {
+    async fillNeighbour(map: number[][]) {
         d3.selectAll("#currentpoint").each(function () {
             let item = d3.select(this);
             item.attr("id", "neighbourCell");
@@ -70,5 +72,7 @@ export abstract class IPathFinder {
                     item.attr("id", "mainNeighbourCell");
                 }
         });
+
+        await this.playerService.whait();
     }
 };

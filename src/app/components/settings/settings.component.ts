@@ -18,23 +18,19 @@ export class SettingsComponent {
     listId: string = "mainList";
     selected: number;
 
-    constructor(private dialog: MatDialog, private gridService: GridService) { 
+    constructor(private dialog: MatDialog, private gridService: GridService) {
 
     }
 
     ngOnInit(): void {
         if (sessionStorage.getItem(this.listId) == null)
             this.list = [];
-        else this.list =  sessionStorage.getItem(this.listId).split(",");
-        // this.grid = new Grid(this.height, this.firldSize);
-        // this.grid.createGrid();
-        this.redrawField();   
+        else this.list = sessionStorage.getItem(this.listId).split(",");
+        this.redrawField();
     }
 
     redrawField(): void {
         this.gridService.setGrid(this.fieldSize, this.height)
-        //this.grid = new Grid(this.height, this.firldSize);
-        //this.grid.createGrid();
     }
 
     changeTransparency() {
@@ -53,7 +49,7 @@ export class SettingsComponent {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result.length > 0)
-                this.saveGrid(result);               
+                this.saveGrid(result);
 
         });
     }
@@ -72,11 +68,11 @@ export class SettingsComponent {
         this.fieldSize = grid.fieldSize;
         this.data = grid.data;
 
-        this.gridService.loadGrid(grid.height, grid.fieldSize, 
+        this.gridService.loadGrid(grid.height, grid.fieldSize,
             grid.startPoint, grid.finishPoint, grid.data);
     }
 
-    removeItem(){
+    removeItem() {
         this.list.splice(this.selected, 1)
     }
 }

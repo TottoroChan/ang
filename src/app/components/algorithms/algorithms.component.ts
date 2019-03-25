@@ -79,10 +79,9 @@ export class AlgorithmsComponent {
     }
 
     play() {
-        if (this.algorithm == null){
+        if (this.algorithm == null)
             this.initAlgorithm();
-            this.playerService.play();
-        }
+        this.playerService.play();
     }
 
     forward() {
