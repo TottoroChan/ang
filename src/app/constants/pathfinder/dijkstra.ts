@@ -3,119 +3,73 @@ import { Vertex } from "../vertex";
 import { PlayerService } from 'src/app/services/player.service';
 import { GridService } from 'src/app/services/grid.service';
 import { StackService } from 'src/app/services/stack.service';
+import { CellType } from '..';
 
 export class Dijkstra extends IPathFinder {
-    valid: boolean[];
     weight: number[];
+    visited: boolean[];
+    p: object[];
     infinityValue: number;
-    visited: any[];
-    goal: boolean;
-    path: any[];
-    lenght: any[];
 
     constructor(isUsingDiagonal: boolean, playerService: PlayerService, 
         gridService: GridService, stackService: StackService ) {        
         super(isUsingDiagonal, playerService, gridService, stackService);
 
-        this.valid = this.createArray(true);
-        this.infinityValue = gridService.data.length * 2;
+        this.infinityValue = gridService.length * 2;
+        this.visited = [];
+        this.p = [];
         this.weight = this.createArray(this.infinityValue);
-        this.weight[gridService.toIndex(gridService.startPoint)] = 0;
-
-        this.visited = []
-        this.goal = true;
-        this.path = new Array(gridService.data.length);
-        this.lenght = new Array(gridService.data.length);
+        let id = gridService.toIndex(gridService.startPoint);
+        this.weight[id] = 0;
+        this.p[id] = {id};
     }
 
     createArray(value: any): any[] {
         let result: number[] = [];
 
-        for (let i = 0; i < this.gridService.data.length; i++) {
+        for (let i = 0; i < this.gridService.length; i++) {
             result[i] = value;
+            if (this.gridService.data[i] == CellType.Wall)
+                this.visited[i] = true;
+            else this.visited[i] = false;
+            this.p[i] = null;
         }
 
         return result;
     }
 
     async work(): Promise<Vertex> {
-
-        this.dj();
-        return null;
-
-        // for (let i = 0; i < this.grid.data.length; i++) {
-
-        //     await this.player.whait();
-        //     this.step();      
-        // }
-
-        // console.log("result deekstr")
-        // console.log(this.valid)
-        // console.log(this.weight)
-        // return null;
+       return this.djkstra();
     }
-
-    step(): any {
-        let min = this.infinityValue + 1;
-        let id_min = -1;
-
-        for (let i = 0; i < this.weight.length; i++) {
-            if (this.valid[i] && this.weight[i] < min) {
-                min = this.weight[i];
-                id_min = i;
-            }
-        }
-
-        let neighbours = this.gridService.neighbourNodes(new Vertex(this.gridService.toPoint(id_min), null), this.isUsingDiagonal)
-        this.fillNeighbour(neighbours.map(r => r.point));
-
-        for (let i = 0; i < neighbours.length; i++) {
-            let weight = this.weight[id_min] + 1;
-            if (weight < this.weight[i]) {
-                weight[this.gridService.toIndex(neighbours[i].point)] = weight
-            }
-        }
-
-        this.valid[id_min] = false;
-    }
-
-    dj() {
-        let start = this.gridService.toIndex(this.gridService.startPoint);
-        this.lenght[start] = 0;
-        this.path[start] = 0;
-        for (let i = 0; i < this.lenght.length; i++) {
-            if (i != start)
-                this.lenght[i] = 1000 * this.lenght.length;
-        }
-        console.log("started: " + start + "=== w:" + this.lenght[start])
-
-        while (this.visited.length < this.lenght.length) {
+    djkstra(): any {
+        while(this.notVisitedExist()){
             let v = this.getMin();
-            this.visited.push(v);
+            let point = this.gridService.toPoint(v);
+            this.visited[v] = true;
 
-            var ve = new Vertex(this.gridService.toPoint(v), null);
-
-            let neighbours = this.gridService.neighbourNodes(ve, this.isUsingDiagonal)
-
+            let neighbours = this.gridService.getNeighboursId(point, this.isUsingDiagonal)
             neighbours.forEach(element => {
-                let u = this.gridService.toIndex(element.point);
-                if (this.check(u)) {
-                    if (this.lenght[u] > (this.lenght[v] + element.weight)) {
-                        this.lenght[u] = this.lenght[v] + element.weight;
-                        this.path[u] = [this.path[v], u]
-                    }
+                let id = this.gridService.toIndex(element);
+                let w = this.weight[v] + this.gridService.data[id]+1;
+
+                if(this.weight[id]>w){
+                    this.weight[id] = w;
+                    this.p[id] = [this.p[v], id];
                 }
             });
         }
-        console.log("resuuuuuuult")
-        console.log(this.lenght)
-        console.log(this.path)
+
+        console.log("-------------------------------")
+        console.log(this.visited)
+        console.log(this.p)
+        console.log(this.weight)
+        return null;
     }
     getMin(): any {
-        let min = this.lenght[0];
-        let id = 0;
+        let min = this.infinityValue;
+        let id = -1;
 
-        this.lenght.forEach((element, i) => {
+        this.weight.forEach((element, i) => {
             if (this.check(i)) {
                 if (element < min) {
                     min = element;
@@ -126,33 +80,18 @@ export class Dijkstra extends IPathFinder {
 
         return id;
     }
+    notVisitedExist(): any {
+        for (let i = 0; i < this.visited.length; i++) {
+            if (!this.visited[i])
+                return true;            
+        }
+
+        return false;
+    }
     check(index: any): any {
-        let notexist = true;
-        this.visited.forEach(element => {
-            if (element == index)
-                notexist = false;
-        })
-        return notexist;
-    }
-
-    selectPath(start: Vertex): any {
-        let neighbours = this.gridService.neighbourNodes(start, this.isUsingDiagonal)
-        let min = this.getMinWeightN(neighbours);
-        console.log("then: " + min.point[0] + "," + min.point[1] + "=== w:" + min.weight)
-        this.visited.push(min);
-        console.log(this.visited)
-        this.selectPath(min);
-    }
-
-
-    getMinWeightN(neighbours: Vertex[]): any {
-        let min = neighbours[0];
-
-        neighbours.forEach(element => {
-            if (element.weight < min.weight)
-                min = element;
-        });
-
-        return min;
+        if (this.visited[index]){
+            return  false;
+        }
+        return true;
     }
 }

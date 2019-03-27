@@ -54,6 +54,7 @@ export class GridService {
         this.setGrid(fieldSize, height);
     }
 
+    get length() { return this._length; }
     get height() { return this._height; }
 
     get fieldSize() { return this._fieldSize; }
