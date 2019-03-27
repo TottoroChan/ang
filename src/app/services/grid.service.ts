@@ -15,6 +15,7 @@ export class GridService {
     private _height: number = 30;
     private _data: Uint8Array;
     private _fromStorage = false;
+    private _length: number;
     workIsFinished: Subject<any> = new Subject(); 
     trancparencyChanged: Subject<any> = new Subject(); 
     gridChanged: Subject<any> = new Subject(); 
@@ -35,20 +36,21 @@ export class GridService {
     setGrid(size: number[], height: number) {
         this._height = height;
         this._fieldSize = size;
-        this._data = new Uint8Array(size[0] * size[1]);
+        this._length = size[0] * size[1];
         if (!this._fromStorage){
+            this._data = new Uint8Array(this._length);
             this._startPoint = _startPoint;
-            this._finishPoint = _finishPoint;            
+            this._finishPoint = _finishPoint;  
         }
         this.gridChanged.next() 
         this._fromStorage = false;   
     }
 
     loadGrid(height: any, fieldSize: any, startPoint: any, finishPoint: any, data: any): any {
-        this._height = height;
         this._startPoint = startPoint;
         this._finishPoint = finishPoint;
         this._data = data;
+        this._fromStorage = true;
         this.setGrid(fieldSize, height);
     }
 

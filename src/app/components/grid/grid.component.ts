@@ -13,7 +13,7 @@ export class GridComponent {
     height: number = 30;
     isPenDown: boolean;
     currentColor: CellColor = CellColor.Empty;
-    transparency: number;
+    transparency: number = 100;
 
     constructor(private gridService: GridService,private playerService: PlayerService ) {
         this.gridService.workIsFinished.subscribe(value => {
@@ -170,6 +170,7 @@ export class GridComponent {
     private mouseup(d: any, i: any, n: any) {
         this.isPenDown = false;
         this.currentColor = CellColor.Empty;
+        console.log(this.gridService.data)
     }
 
     //получение координат для рисования

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { DialogComponent } from '../dialog/dialog.component';
 import { GridService } from 'src/app/services/grid.service';
+import { GridData } from 'src/app/constants';
 
 
 @Component({
@@ -13,7 +14,6 @@ export class SettingsComponent {
     height: number = 30;
     fieldSize: number[] = [10, 10];
     transparency: number = 100;
-    data: Uint8Array;
     list: string[];
     listId: string = "mainList";
     selected: number;
@@ -55,8 +55,9 @@ export class SettingsComponent {
     }
 
     saveGrid(key: string) {
-        this.data = this.gridService.data;
-        sessionStorage.setItem(key, JSON.stringify(this.gridService));
+        let gridData = new GridData(this.gridService.height, this.gridService.fieldSize,
+             this.gridService.startPoint, this.gridService.finishPoint, this.gridService.data)
+        sessionStorage.setItem(key, JSON.stringify(gridData));
 
         this.list.push(key);
         sessionStorage.setItem(this.listId, this.list.toString());
@@ -66,7 +67,6 @@ export class SettingsComponent {
         let grid = JSON.parse(sessionStorage.getItem(this.list[this.selected]));
         this.height = grid.height;
         this.fieldSize = grid.fieldSize;
-        this.data = grid.data;
 
         this.gridService.loadGrid(grid.height, grid.fieldSize,
             grid.startPoint, grid.finishPoint, grid.data);

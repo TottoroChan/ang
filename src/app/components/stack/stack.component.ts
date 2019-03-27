@@ -26,7 +26,7 @@ export class StackComponent {
                 .attr("x", vertex.point[0])
                 .attr("y", vertex.point[1]);
             div.append("p").text("Point: [" + vertex.point[0] + "," + vertex.point[1] + "]")
-            div.append("p").text("Parent: [" + vertex.parent.point[0] + "," + vertex.parent.point[1] + "]")
+            //div.append("p").text("Parent: [" + vertex.parent.point[0] + "," + vertex.parent.point[1] + "]")
         }
 
         let stackElement = d3.selectAll(".stack-element");

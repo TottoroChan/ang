@@ -15,3 +15,21 @@ export enum CellColor {
     Black = "black",
     Empty = ""
 }
+
+
+export class GridData{
+    height: number; 
+    fieldSize: number[];
+    startPoint: number[];
+    finishPoint: number[];
+    data: Uint8Array;
+
+    constructor(height: number, fieldSize: number[], startPoint: number[],
+        finishPoint: number[], data: Uint8Array){
+        this.height = height;
+        this.fieldSize = fieldSize;
+        this.startPoint = startPoint;
+        this.finishPoint = finishPoint;
+        this.data = data;
+    }
+}
