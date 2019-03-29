@@ -15,26 +15,22 @@ export class GridComponent {
     currentColor: CellColor = CellColor.Empty;
     transparency: number = 100;
 
-    constructor(private gridService: GridService,private playerService: PlayerService ) {
+    constructor(private gridService: GridService, private playerService: PlayerService) {
         this.gridService.workIsFinished.subscribe(value => {
-              this.fillPath(value); 
-            }); 
+            this.fillPath(value);
+        });
         this.gridService.trancparencyChanged.subscribe(value => {
-              this.transparency = value; 
-            }); 
+            this.transparency = value;
+        });
         this.gridService.gridChanged.subscribe(() => {
-              this.build(); 
-            }); 
+            this.height = this.gridService.height;
+            this.build();
+        });
 
         //this.build();
     }
 
-    rebuildGrid(height: number, fieldSize: number[]) {
-        this.height = height;
-        this.gridService.setGrid(fieldSize, height);
-    }
-
-    clear(){        
+    clear() {
         d3.select("#canvas")
             .selectAll("*")
             .remove();
@@ -117,8 +113,8 @@ export class GridComponent {
         for (let i = path.length - 1; i >= 0; i--)
             d3.select("svg").insert("circle")
                 .attr("id", "pathCell")
-                .attr("cx", path[i][0]*this.height + this.height/2)
-                .attr("cy", path[i][1]*this.height +  this.height/2)
+                .attr("cx", path[i][0] * this.height + this.height / 2)
+                .attr("cy", path[i][1] * this.height + this.height / 2)
                 .attr("r", this.height / 4);
     }
 

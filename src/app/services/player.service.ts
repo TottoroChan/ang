@@ -17,7 +17,7 @@ export class PlayerService {
     }
 
     play() {
-        this.player = interval(70).subscribe(this.subject);
+        this.player = interval(60).subscribe(this.subject);
     }
 
     forward() {
