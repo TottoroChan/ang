@@ -7,21 +7,23 @@ import { CellType } from '..';
 
 export class Dijkstra extends IPathFinder {
     weight: number[];
-    visited: boolean[];
-    p: object[];
+    path: [number, any][];
     infinityValue: number;
+    openSet: {id: number, w: number}[];
 
-    constructor(isUsingDiagonal: boolean, playerService: PlayerService, 
-        gridService: GridService, stackService: StackService ) {        
+    constructor(isUsingDiagonal: boolean, playerService: PlayerService,
+        gridService: GridService, stackService: StackService) {
         super(isUsingDiagonal, playerService, gridService, stackService);
 
         this.infinityValue = gridService.length * 2;
-        this.visited = [];
-        this.p = [];
+        this.path = [];
         this.weight = this.createArray(this.infinityValue);
+
         let id = gridService.toIndex(gridService.startPoint);
         this.weight[id] = 0;
-        this.p[id] = {id};
+        this.path[id] = [id, null];
+        this.openSet = [{id: id, w: 0}];
+        this.setStackData(this.openSet.map(x => this.gridService.toPoint(x.id)))        
     }
 
     createArray(value: any): any[] {
@@ -29,69 +31,82 @@ export class Dijkstra extends IPathFinder {
 
         for (let i = 0; i < this.gridService.length; i++) {
             result[i] = value;
-            if (this.gridService.data[i] == CellType.Wall)
-                this.visited[i] = true;
-            else this.visited[i] = false;
-            this.p[i] = null;
+            this.path[i] = null;
         }
 
         return result;
     }
 
     async work(): Promise<Vertex> {
-       return this.djkstra();
-    }
-    djkstra(): any {
-        while(this.notVisitedExist()){
-            let v = this.getMin();
-            let point = this.gridService.toPoint(v);
-            this.visited[v] = true;
 
-            let neighbours = this.gridService.getNeighboursId(point, this.isUsingDiagonal)
-            neighbours.forEach(element => {
-                let id = this.gridService.toIndex(element);
-                let w = this.weight[v] + this.gridService.data[id]+1;
+        while (this.openSet.length > 0) {
 
-                if(this.weight[id]>w){
-                    this.weight[id] = w;
-                    this.p[id] = [this.p[v], id];
-                }
-            });
+            await this.playerService.whait();
+            let result = this.step();
+
+            if (result) {
+                return result;
+            }
+
         }
 
-        console.log("-------------------------------")
-        console.log(this.visited)
-        console.log(this.p)
-        console.log(this.weight)
         return null;
     }
-    getMin(): any {
-        let min = this.infinityValue;
-        let id = -1;
 
-        this.weight.forEach((element, i) => {
-            if (this.check(i)) {
-                if (element < min) {
-                    min = element;
-                    id = i;
-                }
+    step(): Vertex {
+        let v = this.getMin();
+        this.setStackData(this.openSet.map(x => this.gridService.toPoint(x.id)))
+        let point = this.gridService.toPoint(v);
+
+
+        if (this.gridService.checkGoal(point)) {
+            return new Vertex(point, null)
+        }
+
+        let neighbours = this.gridService.getNeighboursId(point, this.isUsingDiagonal)
+        this.fillNeighbour(neighbours);
+
+        neighbours.forEach(element => {
+            let id = this.gridService.toIndex(element);
+            let w = this.weight[v] + this.gridService.data[id] + 1;
+
+            if (this.weight[id] > w) {
+                this.weight[id] = w;
+                this.path[id] = [id,this.path[v]];
+                this.openSet.push({id, w});
             }
         });
 
+        return null;
+    }
+
+    getMin(): any {
+        let min = this.infinityValue;
+        let id = -1;
+        let splice = -1;
+
+        this.openSet.forEach((element, i) => {
+                if (element.w < min) {
+                    min = element.w;
+                    id = element.id;
+                    splice = i;
+                }
+        });
+
+        this.openSet.splice(splice, 1);
+
         return id;
     }
-    notVisitedExist(): any {
-        for (let i = 0; i < this.visited.length; i++) {
-            if (!this.visited[i])
-                return true;            
+
+    reconstructPath(node: Vertex) {
+        let result = [node.point];
+        let path = this.path[this.gridService.toIndex(node.point)]
+
+        while (path[1] != null) {
+            result.push(this.gridService.toPoint(path[0]))
+            path = path[1];
         }
 
-        return false;
-    }
-    check(index: any): any {
-        if (this.visited[index]){
-            return  false;
-        }
-        return true;
+        this.gridService.finish(result);
     }
 }

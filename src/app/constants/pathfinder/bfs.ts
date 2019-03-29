@@ -16,14 +16,14 @@ export class BFS extends IPathFinder {
         this.levels = this.setLevels();
         this.levels[this.gridService.toIndex(start)] = 0;
         this.queue = [new Vertex(start, null)]
-        this.setStackData(this.queue);
+        this.setStackData(this.queue.map(x => x.point));
     }
 
     async work(): Promise<Vertex> {
         let result = null;
         while (this.queue.length > 0) {
             let vertex = this.queue.shift();
-            this.setStackData(this.queue);
+            this.setStackData(this.queue.map(x => x.point));
 
             await this.playerService.whait();
             result = this.step(vertex);
@@ -43,7 +43,7 @@ export class BFS extends IPathFinder {
             if (this.levels[this.gridService.toIndex(child.point)] == null) {// которые ещё не были посещены 
                 child.parent = vertex;
                 this.queue.push(child); //добавить в конец очереди
-                this.setStackData(this.queue);
+                this.setStackData(this.queue.map(x => x.point));
                 this.levels[this.gridService.toIndex(child.point)] = this.levels[this.gridService.toIndex(vertex.point)] + 1;// и пометить как посещённые
 
                 if (this.gridService.checkGoal(child.point)) {// проверить, не является ли точка финишем
@@ -56,8 +56,8 @@ export class BFS extends IPathFinder {
     }
 
     setLevels(): any[] {
-        var l = [];
-        for (var i = 0; i < this.gridService.data.length; i++) {
+        let l = [];
+        for (let i = 0; i < this.gridService.data.length; i++) {
             l.push(null)
         }
         return l;

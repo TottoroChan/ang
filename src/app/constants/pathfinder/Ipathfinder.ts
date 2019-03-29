@@ -17,7 +17,7 @@ export abstract class IPathFinder {
     }
 
     reconstructPath(node: Vertex){
-        var path = [];
+        let path = [];
         while (node != null) {
             path.push(node.point)
             node = node.parent;
@@ -44,7 +44,7 @@ export abstract class IPathFinder {
         return null;
     }
 
-    async setStackData(array: Vertex[]){  
+    async setStackData(array: number[][]){  
         d3.select("#stack .wraper")
             .selectAll("*")
             .remove();

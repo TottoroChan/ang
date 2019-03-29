@@ -22,7 +22,7 @@ export class JPS extends IPathFinder {
         do {
             await this.playerService.whait();
             this.bestPoint = this.step();
-            this.setStackData([this.bestPoint]);
+            this.setStackData([this.bestPoint.point]);
 
             this.fillBestJumpPoint(this.bestPoint.point);
 
@@ -33,10 +33,10 @@ export class JPS extends IPathFinder {
 
     step(): Vertex {
         this.jumpedpoints = this.jumpedpoints.filter(jp => jp.point != this.bestPoint.point);
-        var neighbours = this.allNeighbourNodes();
+        let neighbours = this.allNeighbourNodes();
         neighbours.forEach(element => {
             element.setParent(this.bestPoint)
-            var result = this.getJumpedPoints(element);
+            let result = this.getJumpedPoints(element);
 
             if (result !== null) {
                 this.jumpedpoints.push(result);
@@ -269,14 +269,14 @@ export class JPS extends IPathFinder {
     fillResearchedPoint(point: number[]) {
         d3.selectAll("#cell")
             .each(function () {
-                var item = d3.select(this);
+                let item = d3.select(this);
                 if (+item.attr("cX") == point[0] && + item.attr("cY") == point[1]) {
                     item.attr("class", "researchedPoint");
                 }
             });
         d3.selectAll("#neighbourCell")
             .each(function () {
-                var item = d3.select(this);
+                let item = d3.select(this);
                 if (+item.attr("cX") == point[0] && + item.attr("cY") == point[1]) {
                     item.attr("class", "researchedPoint");
                 }
@@ -285,16 +285,16 @@ export class JPS extends IPathFinder {
     fillJumpPoints(map: number[][]) {
         d3.selectAll("#cell")
             .each(function () {
-                var item = d3.select(this);
-                for (var i = map.length - 1; i >= 0; i--)
+                let item = d3.select(this);
+                for (let i = map.length - 1; i >= 0; i--)
                     if (+item.attr("cX") == map[i][0] && +item.attr("cY") == map[i][1]) {
                         item.attr("id", "jumpPoint");
                     }
             });
         d3.selectAll("#neighbourCell")
             .each(function () {
-                var item = d3.select(this);
-                for (var i = map.length - 1; i >= 0; i--)
+                let item = d3.select(this);
+                for (let i = map.length - 1; i >= 0; i--)
                     if (+item.attr("cX") == map[i][0] && +item.attr("cY") == map[i][1]) {
                         item.attr("id", "jumpPoint");
                     }
@@ -303,7 +303,7 @@ export class JPS extends IPathFinder {
     fillBestJumpPoint(point: number[]) {
         d3.selectAll("#jumpPoint")
             .each(function () {
-                var item = d3.select(this);
+                let item = d3.select(this);
                 if (+item.attr("cX") == point[0] && + item.attr("cY") == point[1]) {
                     item.attr("class", "bestJumpPoint");
                 } else {

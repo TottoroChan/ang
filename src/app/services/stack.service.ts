@@ -7,14 +7,14 @@ import { Subject } from 'rxjs';
 })
 
 export class StackService {
-    private _data: Vertex[];
+    private _data: number[][];
     stackUpdated: Subject<any> = new Subject(); 
 
     constructor() {
         this._data = [];
     }
-
-    updateStack(value: Vertex[]) {
+s
+    updateStack(value: number[][]) {
          this._data = value; 
          this.stackUpdated.next(this._data);
     }

@@ -22,7 +22,7 @@ export class Astar extends IPathFinder {
         startPoint.setH(this.isUsingDiagonal, this.gridService.finishPoint);
         startPoint.setF();
         this.openSet.push(startPoint); //добавление начальной вершины 
-        this.setStackData(this.openSet); 
+        this.setStackData(this.openSet.map(x => x.point)); 
     }
 
     async work(): Promise<Vertex> {       
@@ -37,7 +37,7 @@ export class Astar extends IPathFinder {
     }
 
     step(): Vertex{
-        this.setStackData(this.openSet);
+        this.setStackData(this.openSet.map(x => x.point));
         let vertex = this.vertexWithMinF(); //вершина с самым маленьким F
         
         if (this.gridService.checkGoal(vertex.point)) { // если финиш - выходим
@@ -47,7 +47,7 @@ export class Astar extends IPathFinder {
         let index = this.openSet.indexOf(vertex);
         this.openSet.splice(index, 1); // удалям вершину и отправляем ее на изучение
         this.resultSet.push(vertex);
-        this.setStackData(this.openSet);
+        this.setStackData(this.openSet.map(x => x.point));
 
         this.neighbours = this.gridService.neighbourNodes(vertex, this.isUsingDiagonal); // список соседних точек		
         this.fillNeighbour(this.neighbours.map(r => r.point));
@@ -78,7 +78,7 @@ export class Astar extends IPathFinder {
 
             node = neighbour;
             
-            this.setStackData(this.openSet);
+            this.setStackData(this.openSet.map(x => x.point));
         }
         else { //сосед уже есть в списке
             if (g_score < node.g)

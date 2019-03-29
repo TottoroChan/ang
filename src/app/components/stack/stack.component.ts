@@ -19,15 +19,12 @@ export class StackComponent {
         });
     }
 
-    savePoint(vertex: Vertex) {
-        if (vertex.parent != null) {
+    savePoint(point: number[]) {
             let div = d3.select("#stack .wraper").append("div")
                 .attr('class', "stack-element")
-                .attr("x", vertex.point[0])
-                .attr("y", vertex.point[1]);
-            div.append("p").text("Point: [" + vertex.point[0] + "," + vertex.point[1] + "]")
-            //div.append("p").text("Parent: [" + vertex.parent.point[0] + "," + vertex.parent.point[1] + "]")
-        }
+                .attr("x", point[0])
+                .attr("y", point[1]);
+            div.append("p").text("[" + point[0] + "," + point[1] + "]")
 
         let stackElement = d3.selectAll(".stack-element");
         if (stackElement) {
