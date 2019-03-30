@@ -261,8 +261,8 @@ export class JPS extends IPathFinder {
     }
 
     itIsExistPoint(point: number[]) {
-        return point[0] < this.gridService.fieldSize[1] 
-            && point[1] < this.gridService.fieldSize[0] 
+        return point[0] < this.gridService.fieldSize[0] 
+            && point[1] < this.gridService.fieldSize[1] 
             && point[0] >= 0 && point[1] >= 0;
     }
 
