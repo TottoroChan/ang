@@ -2,7 +2,6 @@ import * as d3 from "d3";
 import { Component } from '@angular/core';
 import { CellColor, CellType } from 'src/app/constants';
 import { GridService } from 'src/app/services/grid.service';
-import { PlayerService } from 'src/app/services/player.service';
 
 @Component({
     selector: 'grid',
@@ -15,7 +14,7 @@ export class GridComponent {
     currentColor: CellColor = CellColor.Empty;
     transparency: number = 100;
 
-    constructor(private gridService: GridService, private playerService: PlayerService) {
+    constructor(private gridService: GridService) {
         this.gridService.workIsFinished.subscribe(value => {
             this.fillPath(value);
         });
@@ -32,6 +31,9 @@ export class GridComponent {
 
     clear() {
         d3.select("#canvas")
+            .selectAll("*")
+            .remove();
+        d3.select("#stack .current")
             .selectAll("*")
             .remove();
         d3.select("#stack .wraper")

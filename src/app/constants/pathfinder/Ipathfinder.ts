@@ -51,7 +51,16 @@ export abstract class IPathFinder {
 
         this.stackService.updateStack(array);
 
-        await this.playerService.whait();
+        //await this.playerService.whait();
+    }
+
+    async setCurrentPoint(point: number[]){  
+        d3.select("#stack .current")
+            .selectAll("*")
+            .remove();
+
+        this.stackService.updateCurrent(point);
+        //await this.playerService.whait();
     }
 
 

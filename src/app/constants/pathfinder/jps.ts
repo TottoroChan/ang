@@ -22,7 +22,7 @@ export class JPS extends IPathFinder {
         do {
             await this.playerService.whait();
             this.bestPoint = this.step();
-            this.setStackData([this.bestPoint.point]);
+            this.setCurrentPoint(this.bestPoint.point);
 
             this.fillBestJumpPoint(this.bestPoint.point);
 
@@ -34,6 +34,7 @@ export class JPS extends IPathFinder {
     step(): Vertex {
         this.jumpedpoints = this.jumpedpoints.filter(jp => jp.point != this.bestPoint.point);
         let neighbours = this.allNeighbourNodes();
+        this.setStackData(neighbours.map(x => x.point));
         neighbours.forEach(element => {
             element.setParent(this.bestPoint)
             let result = this.getJumpedPoints(element);

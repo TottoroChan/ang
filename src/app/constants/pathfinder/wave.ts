@@ -46,6 +46,7 @@ export class Wave extends IPathFinder {
     }
 
     step(vertex: Vertex): Vertex {
+        this.setCurrentPoint(vertex.point);
         this.setStackData(this.wave.map(x => x.point));
         let neighbours = this.gridService.neighbourNodes(vertex, this.isUsingDiagonal);
         this.fillNeighbour(neighbours.map(r => r.point));

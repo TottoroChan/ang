@@ -71,6 +71,22 @@ input {
   padding-top: 5px;
 }
 
+#stack label {
+  position: inherit;
+  top: 3px;
+  font-size: 15px;
+  line-height: 13px;
+  border-bottom: 1px solid black;
+}
+
+#stack .current {
+  height: 100%;
+  position: relative;
+  width: 125px;
+  border-right: 1px solid black;
+  text-align: center;
+}
+
 #stack .wraper {
   height: 100%;
   position: relative;
@@ -79,13 +95,14 @@ input {
   white-space: nowrap;
 }
 
+#stack .current .stack-element,
 #stack .wraper .stack-element {
   display: inline-block;
   border: 1px solid #616161;
   border-radius: 10px;
   height: 70px;
   width: 70px;
-  margin: 2px;
+  margin: 14px 3px 0 3px;
   text-align: center;
   background: #e5e3e3;
   font-size: 20px;
@@ -102,7 +119,7 @@ input {
 }
 
 .remove{
-  background-image: url(/images/remove.svg);
+  background-image: url(assets/images/remove.svg);
   padding: 3px 12px;
   background-position: center;
   background-repeat: no-repeat;
@@ -117,16 +134,16 @@ input {
   padding: 3px 12px;
 }
 .play{
-  background-image: url(/images/play.svg);
+  background-image: url(assets/images/play.svg);
 }
 .stop{
-  background-image: url(/images/stop.svg);
+  background-image: url(assets/images/stop.svg);
 }
 .forward{
-  background-image: url(/images/forward.svg);
+  background-image: url(assets/images/forward.svg);
 }
 .backward{
-  background-image: url(/images/backward.svg);
+  background-image: url(assets/images/backward.svg);
 }
 /* fill */
 

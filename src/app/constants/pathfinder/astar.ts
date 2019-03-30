@@ -22,7 +22,6 @@ export class Astar extends IPathFinder {
         startPoint.setH(this.isUsingDiagonal, this.gridService.finishPoint);
         startPoint.setF();
         this.openSet.push(startPoint); //добавление начальной вершины 
-        this.setStackData(this.openSet.map(x => x.point)); 
     }
 
     async work(): Promise<Vertex> {       
@@ -37,8 +36,8 @@ export class Astar extends IPathFinder {
     }
 
     step(): Vertex{
-        this.setStackData(this.openSet.map(x => x.point));
         let vertex = this.vertexWithMinF(); //вершина с самым маленьким F
+        this.setCurrentPoint(vertex.point);
         
         if (this.gridService.checkGoal(vertex.point)) { // если финиш - выходим
             return vertex;

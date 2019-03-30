@@ -22,8 +22,7 @@ export class Dijkstra extends IPathFinder {
         let id = gridService.toIndex(gridService.startPoint);
         this.weight[id] = 0;
         this.path[id] = [id, null];
-        this.openSet = [{id: id, w: 0}];
-        this.setStackData(this.openSet.map(x => this.gridService.toPoint(x.id)))        
+        this.openSet = [{id: id, w: 0}];  
     }
 
     createArray(value: any): any[] {
@@ -55,8 +54,9 @@ export class Dijkstra extends IPathFinder {
 
     step(): Vertex {
         let v = this.getMin();
-        this.setStackData(this.openSet.map(x => this.gridService.toPoint(x.id)))
         let point = this.gridService.toPoint(v);
+        this.setCurrentPoint(point);
+        this.setStackData(this.openSet.map(x => this.gridService.toPoint(x.id)))
 
 
         if (this.gridService.checkGoal(point)) {

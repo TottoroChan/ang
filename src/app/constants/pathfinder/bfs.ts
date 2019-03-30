@@ -16,13 +16,13 @@ export class BFS extends IPathFinder {
         this.levels = this.setLevels();
         this.levels[this.gridService.toIndex(start)] = 0;
         this.queue = [new Vertex(start, null)]
-        this.setStackData(this.queue.map(x => x.point));
     }
 
     async work(): Promise<Vertex> {
         let result = null;
         while (this.queue.length > 0) {
             let vertex = this.queue.shift();
+            this.setCurrentPoint(vertex.point);
             this.setStackData(this.queue.map(x => x.point));
 
             await this.playerService.whait();

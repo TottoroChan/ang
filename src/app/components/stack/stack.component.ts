@@ -1,6 +1,5 @@
 import * as d3 from "d3";
 import { Component } from "@angular/core";
-import { Vertex } from 'src/app/constants/vertex';
 import { StackService } from 'src/app/services/stack.service';
 import { GridService } from 'src/app/services/grid.service';
 
@@ -12,6 +11,9 @@ import { GridService } from 'src/app/services/grid.service';
 export class StackComponent {
 
     constructor(private stackService: StackService, private gridService: GridService) {
+        this.stackService.currentUpdated.subscribe(value => {
+            this.setCurrent(value);
+        });
         this.stackService.stackUpdated.subscribe(value => {
             value.forEach(element => {
                 this.savePoint(element);
@@ -19,12 +21,20 @@ export class StackComponent {
         });
     }
 
+    setCurrent(point: number[]) {
+        let div = d3.select("#stack .current").append("div")
+            .attr('class', "stack-element")
+            .attr("x", point[0])
+            .attr("y", point[1]);
+        div.append("p").text("[" + point[0] + "," + point[1] + "]")
+    }
+
     savePoint(point: number[]) {
-            let div = d3.select("#stack .wraper").append("div")
-                .attr('class', "stack-element")
-                .attr("x", point[0])
-                .attr("y", point[1]);
-            div.append("p").text("[" + point[0] + "," + point[1] + "]")
+        let div = d3.select("#stack .wraper").append("div")
+            .attr('class', "stack-element")
+            .attr("x", point[0])
+            .attr("y", point[1]);
+        div.append("p").text("[" + point[0] + "," + point[1] + "]")
 
         let stackElement = d3.selectAll(".stack-element");
         if (stackElement) {
