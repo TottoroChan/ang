@@ -1,6 +1,5 @@
 import { Vertex } from "../vertex";
 import { IPathFinder } from "./Ipathfinder";
-import * as d3 from "d3";
 import { PlayerService } from 'src/app/services/player.service';
 import { GridService } from 'src/app/services/grid.service';
 import { StackService } from 'src/app/services/stack.service';
@@ -9,10 +8,10 @@ export class Astar extends IPathFinder {
     betterValue: boolean;
     openSet: Vertex[];
     resultSet: Vertex[];
-    neighbours:  Vertex[];
+    neighbours: Vertex[];
 
-    constructor(isUsingDiagonal: boolean, playerService: PlayerService, 
-        gridService: GridService, stackService: StackService ) {        
+    constructor(isUsingDiagonal: boolean, playerService: PlayerService,
+        gridService: GridService, stackService: StackService) {
         super(isUsingDiagonal, playerService, gridService, stackService);
         this.openSet = []; // Множество вершин, которые предстоит изучить.
         this.resultSet = []; // Множество изученых вершин
@@ -24,7 +23,7 @@ export class Astar extends IPathFinder {
         this.openSet.push(startPoint); //добавление начальной вершины 
     }
 
-    async work(): Promise<Vertex> {       
+    async work(): Promise<Vertex> {
         while (this.openSet.length > 0) { //пока список изученых не пустой
             await this.playerService.whait();
             let result = this.step();
@@ -35,74 +34,66 @@ export class Astar extends IPathFinder {
         throw new Error("I can't find path");
     }
 
-    step(): Vertex{
-        let vertex = this.vertexWithMinF(); //вершина с самым маленьким F
+    step(): Vertex {
+        let vertex = this.openSet[0]; //this.vertexWithMinF(); //вершина с самым маленьким F
         this.setCurrentPoint(vertex.point);
-        
-        if (this.gridService.checkGoal(vertex.point)) { // если финиш - выходим
-            return vertex;
-        }
 
-        let index = this.openSet.indexOf(vertex);
-        this.openSet.splice(index, 1); // удалям вершину и отправляем ее на изучение
+        this.openSet.splice(0, 1); // удалям вершину и отправляем ее на изучение
         this.resultSet.push(vertex);
         this.setStackData(this.openSet.map(x => x.point));
 
-        this.neighbours = this.gridService.neighbourNodes(vertex, this.isUsingDiagonal); // список соседних точек		
-        this.fillNeighbour(this.neighbours.map(r => r.point));
-        
+        this.neighbours = this.gridService.neighbourNodes(vertex, this.isUsingDiagonal); // список соседних точек	
+
         let neighbour = null;
         for (let i = 0; i < this.neighbours.length; i++) {
             neighbour = this.neighbours[i];
+            if (this.gridService.checkGoal(neighbour.point)) { // если финиш - выходим
+                neighbour.parent = vertex;
+                return neighbour;
+            }
             neighbour = this.checkNeighbours(neighbour, vertex);
         }
 
         return null;
     }
 
-    checkNeighbours(neighbour: Vertex, vertex: Vertex): any {        
-        let betterValue = false;
+    checkNeighbours(neighbour: Vertex, vertex: Vertex): any {
         if (this.vertexisExist(this.resultSet, neighbour)) //если уже есть в списке
             return;
-        
-        let g_score = vertex.g + vertex.pathTo(neighbour); //g для обрабатываеиого соседа
+
+        let isDiaginal = neighbour.point[0] - vertex.point[0] != 0 && neighbour.point[1] - vertex.point[1] != 0;
+        let diagonalCost = Math.sqrt( Math.pow(neighbour.weight, 2)*2);
+        let g_score = vertex.g + (isDiaginal ?  diagonalCost : neighbour.weight); //g для обрабатываеиого соседа
         let node = this.getVertex(this.openSet, neighbour);
         
-        if (node == null) { //соседа нет в списке
-            neighbour.setG(this.gridService.startPoint);
+        if (node)
+            neighbour = node;
+        
+        if (!node || g_score < neighbour.g) {//если нет в списке или можно обновить g   
+            neighbour.g = g_score;
             neighbour.setH(this.isUsingDiagonal, this.gridService.finishPoint);
             neighbour.setF();
-            this.openSet.push(neighbour);
-            betterValue = true; // лучший сосед
+            neighbour.parent = vertex;
 
-            node = neighbour;
-            
+            if (!node) {//если нет в списке
+                this.openSet.push(neighbour);
+
+                this.fillNeighbour([neighbour.point]);
+            } else {         
+                this.updateMetrics(neighbour);
+            }
+            this.openSet.sort((a, b) => a.f - b.f);
             this.setStackData(this.openSet.map(x => x.point));
-        }
-        else { //сосед уже есть в списке
-            if (g_score < node.g)
-                betterValue = true; //необходимо обновить значения
-            else
-                betterValue = false;
-        }
-        
-        if (betterValue) { // обновление значений
-            node.parent = vertex;
-            node.g = g_score;
-            node.setH(this.isUsingDiagonal, this.gridService.finishPoint);
-            node.setF();
         }
     }
 
-    vertexWithMinF(): Vertex {
-        let minVertex = this.openSet[0];
-
+    updateMetrics(vertex: Vertex) {
         for (let i = 0; i < this.openSet.length; i++) {
-            if (this.openSet[i].f < minVertex.f) {
-                minVertex = this.openSet[i];
+            let point = this.openSet[i].point;
+            if (point[0] == vertex.point[0] && point[1] == vertex.point[1]) {
+                this.openSet[i].g = vertex.g;
+                this.openSet[i].setF();
             }
         }
-
-        return minVertex;
     }
 }

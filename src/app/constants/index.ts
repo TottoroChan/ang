@@ -1,4 +1,4 @@
-export const _shiftMatrix: number[][] = [[-1, 0], [0, -1], [0, 1], [1, 0], [-1, -1], [-1, 1], [1, -1], [1, 1]];;
+export const _shiftMatrix: number[][] = [[0, -1], [-1, 0], [1, 0], [0, 1], [-1, -1], [-1, 1], [1, -1], [1, 1]];;
 export const _algorithmList: [string, string][] = [["astar", "A*"],
                                                     ["wave", "Wave"],
                                                     ["bfs", "BFS"],

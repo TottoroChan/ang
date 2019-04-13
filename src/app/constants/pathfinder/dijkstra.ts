@@ -53,8 +53,9 @@ export class Dijkstra extends IPathFinder {
     }
 
     step(): Vertex {
-        let v = this.getMin();
-        let point = this.gridService.toPoint(v);
+        let v = this.openSet[0];
+        this.openSet.splice(0, 1);
+        let point = this.gridService.toPoint(v.id);
         this.setCurrentPoint(point);
         this.setStackData(this.openSet.map(x => this.gridService.toPoint(x.id)))
 
@@ -64,16 +65,18 @@ export class Dijkstra extends IPathFinder {
         }
 
         let neighbours = this.gridService.getNeighboursId(point, this.isUsingDiagonal)
-        this.fillNeighbour(neighbours);
 
         neighbours.forEach(element => {
             let id = this.gridService.toIndex(element);
-            let w = this.weight[v] + this.gridService.data[id] + 1;
+            let w = this.weight[v.id] + this.gridService.data[id] + 1;
 
             if (this.weight[id] > w) {
                 this.weight[id] = w;
-                this.path[id] = [id,this.path[v]];
+                this.path[id] = [id,this.path[v.id]];
+                this.fillNeighbour([element]);
                 this.openSet.push({id, w});
+                this.openSet.sort((a, b) => a.w - b.w);
+                this.setStackData(this.openSet.map(x => this.gridService.toPoint(x.id)))
             }
         });
 

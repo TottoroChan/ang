@@ -39,7 +39,7 @@ export class Vertex {
     }
 
     setF() {
-        this.f = this.g + this.h + this.weight - 1;
+        this.f = this.g + this.h;
     }
 
     setD(d: number) {
@@ -55,10 +55,6 @@ export class Vertex {
         if (value != CellType.Wall)
             this.isWall = false;
         else this.isWall = true;
-    }
-
-    pathTo(neighbour: Vertex): number {
-        return Math.abs(neighbour.point[0] - this.point[0]) + Math.abs(neighbour.point[1] - this.point[1])+neighbour.weight-1;
     }
 
 }
