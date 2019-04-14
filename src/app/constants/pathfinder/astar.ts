@@ -64,36 +64,34 @@ export class Astar extends IPathFinder {
         let isDiaginal = neighbour.point[0] - vertex.point[0] != 0 && neighbour.point[1] - vertex.point[1] != 0;
         let diagonalCost = Math.sqrt( Math.pow(neighbour.weight, 2)*2);
         let g_score = vertex.g + (isDiaginal ?  diagonalCost : neighbour.weight); //g для обрабатываеиого соседа
-        let node = this.getVertex(this.openSet, neighbour);
-        
-        if (node)
-            neighbour = node;
-        
-        if (!node || g_score < neighbour.g) {//если нет в списке или можно обновить g   
+        let id = this.getElementID(neighbour.point);
+                
+        if (!id || g_score < neighbour.g) {//если нет в списке или можно обновить g   
             neighbour.g = g_score;
             neighbour.setH(this.isUsingDiagonal, this.gridService.finishPoint);
             neighbour.setF();
             neighbour.parent = vertex;
 
-            if (!node) {//если нет в списке
+            if (!id) {//если нет в списке
                 this.openSet.push(neighbour);
 
                 this.fillNeighbour([neighbour.point]);
             } else {         
-                this.updateMetrics(neighbour);
+                this.openSet[id].g = vertex.g;
+                this.openSet[id].setF();
             }
             this.openSet.sort((a, b) => a.f - b.f);
             this.setStackData(this.openSet.map(x => x.point));
         }
     }
 
-    updateMetrics(vertex: Vertex) {
+    getElementID(vertex: number[]){
         for (let i = 0; i < this.openSet.length; i++) {
             let point = this.openSet[i].point;
-            if (point[0] == vertex.point[0] && point[1] == vertex.point[1]) {
-                this.openSet[i].g = vertex.g;
-                this.openSet[i].setF();
+            if (point[0] == vertex[0] && point[1] == vertex[1]) {
+                return i;
             }
         }
+        return null;
     }
 }
