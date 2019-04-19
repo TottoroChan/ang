@@ -44,32 +44,25 @@ export abstract class IPathFinder {
         return null;
     }
 
-    async setStackData(array: number[][]){  
+    setStackData(array: number[][]){ 
         d3.select("#stack .wraper")
             .selectAll("*")
             .remove();
 
         this.stackService.updateStack(array);
-
-        //await this.playerService.whait();
     }
 
-    async setCurrentPoint(point: number[]){  
+    setCurrentPoint(point: number[]){ 
         d3.select("#stack .current")
             .selectAll("*")
             .remove();
 
-        this.stackService.updateCurrent(point);
-        //await this.playerService.whait();
+        this.stackService.updateCurrent(point);        
     }
 
 
-    async fillNeighbour(map: number[][]) {
+    fillNeighbour(map: number[][]) {
         d3.selectAll("#currentpoint").each(function () {
-            let item = d3.select(this);
-            item.attr("id", "neighbourCell");
-        });
-        d3.selectAll("#mainNeighbourCell").each(function () {
             let item = d3.select(this);
             item.attr("id", "neighbourCell");
         });
@@ -78,10 +71,8 @@ export abstract class IPathFinder {
             let item = d3.select(this);
             for (let i = map.length - 1; i >= 0; i--)
                 if (+item.attr("cX") == map[i][0] && +item.attr("cY") == map[i][1]) {
-                    item.attr("id", "mainNeighbourCell");
+                    item.attr("id", "neighbourCell");
                 }
         });
-
-        await this.playerService.whait();
     }
 };

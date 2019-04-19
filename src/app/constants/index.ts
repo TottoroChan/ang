@@ -16,7 +16,6 @@ export enum CellColor {
     Empty = ""
 }
 
-
 export class GridData{
     height: number; 
     fieldSize: number[];

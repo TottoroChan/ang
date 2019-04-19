@@ -89,13 +89,16 @@ export class Wave extends IPathFinder {
             let minD = this.visited[this.gridService.toIndex(goal.point)];
             let parent = neighbours[0];
 
-            neighbours.forEach(node => {
+            for (let i = 0; i < neighbours.length; i++) {
+                let node = neighbours[i];
+
                 let d = this.visited[this.gridService.toIndex(node.point)]
                 if (d!=null && d < minD){
                     minD = this.visited[this.gridService.toIndex(node.point)];
                     parent = node;                    
                 }
-            })
+            }
+            
             goal.parent = parent;
             this.rebuldPath(goal.parent);
         }
