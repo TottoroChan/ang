@@ -10,6 +10,7 @@ export class StackService {
     private _current: number[];
     stackUpdated: Subject<any> = new Subject(); 
     currentUpdated: Subject<any> = new Subject();
+    isBackwardStep: Subject<any> = new Subject();;
 
     constructor() {
         this._data = [];
@@ -19,6 +20,10 @@ export class StackService {
     updateCurrent(value: number[]){
         this._current = value;
         this.currentUpdated.next(this._current)
+    }
+
+    backwardStep(){
+        this.isBackwardStep.next();
     }
 
     updateStack(value: number[][]) {

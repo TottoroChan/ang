@@ -19,6 +19,18 @@ export class Dijkstra extends IPathFinder {
         this.openSet.push(startPoint); //добавление начальной вершины 
     }
 
+    save(): object {
+        return {
+            stack: Object.assign(new Array(), this.openSet), 
+            result: Object.assign(new Array(), this.resultSet)}
+    }
+    load(data) {
+        this.openSet = data.stack;
+        this.resultSet = data.result;
+
+        this.updateIvents();
+    }
+
     async work(): Promise<Vertex> {
         while (this.openSet.length > 0) { //пока список изученых не пустой
             await this.playerService.whait();

@@ -19,6 +19,7 @@ export class GridService {
     workIsFinished: Subject<any> = new Subject(); 
     trancparencyChanged: Subject<any> = new Subject(); 
     gridChanged: Subject<any> = new Subject(); 
+    isBackwardStep: Subject<any> = new Subject();
 
     constructor() {
         this._data = new Uint8Array(this._fieldSize[0] * this._fieldSize[1]);
@@ -27,6 +28,10 @@ export class GridService {
 
     finish(path: number[][]){
         this.workIsFinished.next(path);
+    }
+
+    backwardStep(){
+        this.isBackwardStep.next();
     }
 
     changeTransparency(transparency: number): any {

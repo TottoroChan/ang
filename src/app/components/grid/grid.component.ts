@@ -25,8 +25,9 @@ export class GridComponent {
             this.height = this.gridService.height;
             this.build();
         });
-
-        //this.build();
+        this.gridService.isBackwardStep.subscribe(() => {
+            this.addIvents();
+        });
     }
 
     clear() {
@@ -57,8 +58,8 @@ export class GridComponent {
                 let rect = rows.append("rect")
                     .attr("x", j * this.height)
                     .attr("y", i * this.height)
-                    .attr("cX", j)
-                    .attr("cY", i)
+                    .attr("cx", j)
+                    .attr("cy", i)
                     .attr("width", this.height)
                     .attr("height", this.height)
                     .attr("id", "cell");
@@ -124,7 +125,7 @@ export class GridComponent {
     private fill(d: any, i: any, n: any) {
         this.isPenDown = true;
         let element = d3.select(n[i]);
-        let index = this.gridService.toIndex([+element.attr("cX"), +element.attr("cY")]);
+        let index = this.gridService.toIndex([+element.attr("cx"), +element.attr("cy")]);
 
         if (element.style("fill") == CellColor.Black) {
             this.currentColor = CellColor.Empty;
@@ -149,7 +150,7 @@ export class GridComponent {
         let transparency = 0;
 
         if (this.isPenDown) {
-            let index = this.gridService.toIndex([+element.attr("cX"), +element.attr("cY")]);
+            let index = this.gridService.toIndex([+element.attr("cx"), +element.attr("cy")]);
 
             if (this.currentColor == CellColor.Black) {
                 this.gridService.data[index] = this.transparency;

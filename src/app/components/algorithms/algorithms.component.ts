@@ -21,6 +21,8 @@ export class AlgorithmsComponent {
     algorithm: IPathFinder = null;
     algorithmList: [string, string][] = _algorithmList;
     algorithmId: string = _algorithmList[0][0];
+    state: {grid: string, stack: string, alg: object}[] = [];
+    stepCounter: number = null;
     
     constructor(private playerService: PlayerService, private gridService: GridService, private stackService: StackService){}
 
@@ -71,6 +73,9 @@ export class AlgorithmsComponent {
         d3.select("#stack .wraper")
         .selectAll("*")
         .remove();
+
+        this.state = [];
+        this.stepCounter = null;
     }
 
     initAlgorithm(): any {
@@ -86,13 +91,35 @@ export class AlgorithmsComponent {
     }
 
     forward() {
-        if (this.algorithm == null)
+        if (this.algorithm == null){
             this.initAlgorithm();
+        }
+        this.save();
         this.playerService.forward();
     }
 
+    save() {
+        this.state.push({
+            grid: d3.select("svg").html(),
+            stack: d3.select("#stack").html(),
+            alg: this.algorithm.save()
+        })
+        if (this.stepCounter == null){
+            this.stepCounter = 0
+        }
+        else this.stepCounter++;
+    }
+
     backward() {
-        this.playerService.backward();
+        if (this.stepCounter > 0){
+        let state = this.state[this.stepCounter];
+        d3.select("svg").html(state.grid),
+        d3.select("#stack").html(state.stack),
+        this.algorithm.load(state.alg);
+
+        this.state.splice(this.stepCounter, 1)
+        this.stepCounter--;
+        }
     }
 
     stop(): void {

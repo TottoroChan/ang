@@ -23,6 +23,20 @@ export class Wave extends IPathFinder {
             this.visited[i] = null;            
         }
         this.visited[gridService.toIndex(start.point)] = 0;
+    }    
+    
+    save(): object {
+        return {
+            visited: Object.assign(new Array(), this.visited), 
+            wave: Object.assign(new Array(), this.wave), 
+            d: this.d}
+    }
+    load(data) {
+        this.visited = data.visited;
+        this.wave = data.wave;
+        this.d = data.d;
+
+        this.updateIvents();
     }
 
     async work(): Promise<Vertex> {

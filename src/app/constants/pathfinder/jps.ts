@@ -9,12 +9,25 @@ import { StackService } from 'src/app/services/stack.service';
 export class JPS extends IPathFinder {
     jumpedpoints: any[];
     bestPoint: Vertex;
+
     constructor(isUsingDiagonal: boolean, playerService: PlayerService, 
         gridService: GridService, stackService: StackService ) {        
         super(isUsingDiagonal, playerService, gridService, stackService);
         this.jumpedpoints = [];
         this.bestPoint = new Vertex(gridService.startPoint, null);
         this.bestPoint.setH(this.isUsingDiagonal, gridService.finishPoint);
+    }
+
+    save(): object {
+        return {
+            stack: Object.assign(new Array(), this.jumpedpoints), 
+            best: this.bestPoint}
+    }
+    load(data) {
+        this.jumpedpoints = data.stack;
+        this.bestPoint = data.best;
+
+        this.updateIvents();
     }
 
     async work(): Promise<Vertex> {
@@ -34,7 +47,7 @@ export class JPS extends IPathFinder {
     step(): Vertex {
         this.jumpedpoints = this.jumpedpoints.filter(jp => jp.point != this.bestPoint.point);
         let neighbours = this.allNeighbourNodes();
-        this.setStackData(neighbours.map(x => x.point));
+        this.setStackData(this.jumpedpoints.map(x => x.point));
         neighbours.forEach(element => {
             element.setParent(this.bestPoint)
             let result = this.getJumpedPoints(element);

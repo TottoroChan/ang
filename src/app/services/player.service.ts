@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Subject, interval, Subscription } from "rxjs";
 import { first } from 'rxjs/operators';
+import { IPathFinder } from '../constants/pathfinder/Ipathfinder';
 
 @Injectable({
     providedIn: 'root',
 })
 
 export class PlayerService {
-    isFinished: Subject<any> = new Subject();
     subject: Subject<{}>;
     player: Subscription;
-    previous: this;
 
     constructor() {
         this.subject = new Subject();
@@ -21,12 +20,7 @@ export class PlayerService {
     }
 
     forward() {
-        this.previous = this;
         this.subject.next();
-    }
-
-    backward() {
-        this.subject = this.previous.subject;
     }
 
     stop(): void {

@@ -19,6 +19,9 @@ export class StackComponent {
                 this.savePoint(element);
             });
         });
+        this.stackService.isBackwardStep.subscribe(() => {
+            this.addIvents();
+        });
     }
 
     setCurrent(point: number[]) {
@@ -36,12 +39,15 @@ export class StackComponent {
             .attr("y", point[1]);
         div.append("p").text("[" + point[0] + "," + point[1] + "]")
 
+        this.addIvents();
+    }
+
+    addIvents(){
         let stackElement = d3.selectAll(".stack-element");
         if (stackElement) {
             stackElement.on("mouseover", this.stackMouseOver.bind(this))
                 .on("mouseout", this.stackMouseOut);
         }
-
     }
     stackMouseOver(d: any, i: any, n: any): any {
         let element = d3.select(n[i]);
@@ -51,8 +57,8 @@ export class StackComponent {
             let item = d3.select(this);
             if (isFinishPoint)
                 d3.select("#finish").classed("highlight", true);
-            else if (+item.attr("cX") == +element.attr("x") &&
-                +item.attr("cY") == +element.attr("y"))
+            else if (+item.attr("cx") == +element.attr("x") &&
+                +item.attr("cy") == +element.attr("y"))
                 item.classed("highlight", true);
         });
     }

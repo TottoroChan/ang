@@ -21,6 +21,18 @@ export class Astar extends IPathFinder {
         this.openSet.push(startPoint); //добавление начальной вершины 
     }
 
+    save(): object {
+        return {
+            stack: Object.assign(new Array(), this.openSet), 
+            res: Object.assign(new Array(), this.resultSet)}
+    }
+    load(data) {
+        this.openSet = data.stack;
+        this.resultSet = data.res;
+
+        this.updateIvents();
+    }
+    
     async work(): Promise<Vertex> {
         while (this.openSet.length > 0) { //пока список изученых не пустой
             await this.playerService.whait();

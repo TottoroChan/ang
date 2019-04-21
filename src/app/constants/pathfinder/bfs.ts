@@ -18,6 +18,18 @@ export class BFS extends IPathFinder {
         this.queue = [new Vertex(start, null)]
     }
 
+    save(): object {
+        return {
+            queue: Object.assign(new Array(), this.queue), 
+            levels: Object.assign(new Array(), this.levels)}
+    }
+    load(data) {
+        this.queue = data.queue;
+        this.levels = data.levels;
+
+        this.updateIvents();
+    }
+
     async work(): Promise<Vertex> {
         let result = null;
         while (this.queue.length > 0) {

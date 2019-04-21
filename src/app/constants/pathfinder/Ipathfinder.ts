@@ -7,21 +7,32 @@ import { StackService } from 'src/app/services/stack.service';
 export abstract class IPathFinder {
     isUsingDiagonal: boolean;
 
-    constructor(isUsingDiagonal: boolean, protected playerService: PlayerService, 
-        protected gridService: GridService, private stackService: StackService ) {
+    constructor(isUsingDiagonal: boolean, protected playerService: PlayerService,
+        protected gridService: GridService, protected stackService: StackService) {
         this.isUsingDiagonal = isUsingDiagonal;
+    }
+
+    save(): object {
+        throw new Error("Not implemented");
+    }
+    load(data) {
+        throw new Error("Not implemented");
+    }
+    updateIvents(){
+        this.stackService.backwardStep();
+        this.gridService.backwardStep();
     }
 
     async work(): Promise<Vertex> {
         throw new Error("Not implemented");
     }
 
-    reconstructPath(node: Vertex){
+    reconstructPath(node: Vertex) {
         let path = [];
         while (node != null) {
             path.push(node.point)
             node = node.parent;
-        }        
+        }
         this.gridService.finish(path);
         //return path;
     }
@@ -34,7 +45,7 @@ export abstract class IPathFinder {
         return false;
     }
 
-    getVertex(set: Vertex[],vertex: Vertex): Vertex {
+    getVertex(set: Vertex[], vertex: Vertex): Vertex {
         if (set == null)
             return null;
         for (let i = 0; i < set.length; i++) {
@@ -44,7 +55,7 @@ export abstract class IPathFinder {
         return null;
     }
 
-    setStackData(array: number[][]){ 
+    setStackData(array: number[][]) {
         d3.select("#stack .wraper")
             .selectAll("*")
             .remove();
@@ -52,12 +63,12 @@ export abstract class IPathFinder {
         this.stackService.updateStack(array);
     }
 
-    setCurrentPoint(point: number[]){ 
+    setCurrentPoint(point: number[]) {
         d3.select("#stack .current")
             .selectAll("*")
             .remove();
 
-        this.stackService.updateCurrent(point);        
+        this.stackService.updateCurrent(point);
     }
 
 
@@ -67,10 +78,11 @@ export abstract class IPathFinder {
             item.attr("id", "neighbourCell");
         });
 
-        d3.selectAll("#cell").each(function () {
+        let cells = d3.selectAll("#cell");
+        cells.each(function () {
             let item = d3.select(this);
             for (let i = map.length - 1; i >= 0; i--)
-                if (+item.attr("cX") == map[i][0] && +item.attr("cY") == map[i][1]) {
+                if (+item.attr("cx") == map[i][0] && +item.attr("cy") == map[i][1]) {
                     item.attr("id", "neighbourCell");
                 }
         });
