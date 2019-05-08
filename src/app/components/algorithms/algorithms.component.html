@@ -5,9 +5,19 @@
     <button mat-stroked-button (click)="forward()"><span class="forward"></span></button>
 </div>
 <div class="algorithm">
-    <mat-button-toggle-group name="algorithm" [(value)]="algorithmId" #group="matButtonToggleGroup">
-        <mat-button-toggle *ngFor="let option of algorithmList; index as i" [(value)]="option[0]">{{ option[1] }}
-        </mat-button-toggle>
-    </mat-button-toggle-group>
+    <mat-form-field class="algotithm-select">
+        <mat-select placeholder="алгоритм" [(ngModel)]="algorithmType" (ngModelChange)="algorithmChanged()">
+            <mat-option *ngFor="let option of algorithmList" [(value)]="option[0]">
+                {{ option[1] }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field class="heuristic-select">
+        <mat-select placeholder="эвристика" [(ngModel)]="heuristicType" [disabled]="disableSelect">
+            <mat-option *ngFor="let option of heuristicList" [(value)]="option[0]">
+                {{ option[1] }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
     <mat-slide-toggle color="primary" [(ngModel)]="isUsingDiagonal">использовать диагонали</mat-slide-toggle>
 </div>

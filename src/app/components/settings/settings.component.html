@@ -21,11 +21,10 @@
                         [(ngModel)]="transparency" (change)="changeTransparency()"></mat-slider>
                 </div>
             </div>
-            <div class="history">
+            <div class="storage">
                 <button mat-stroked-button (click)="openPopup()">сохранить</button>
-
                 <mat-form-field>
-                    <mat-select placeholder="select" [(ngModel)]="selected">
+                    <mat-select placeholder="сохранения" [(ngModel)]="selected">
                         <mat-option *ngFor="let item of list; index as i" [value]="i">
                             {{item}}
                         </mat-option>

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { DialogComponent } from '../dialog/dialog.component';
 import { GridService } from 'src/app/services/grid.service';
-import { GridData } from 'src/app/constants';
+import { GridData, _height, _fieldSize, _transparency, _listOfFields } from 'src/app/constants';
 
 
 @Component({
@@ -11,11 +11,11 @@ import { GridData } from 'src/app/constants';
 })
 
 export class SettingsComponent {
-    height: number = 30;
-    fieldSize: number[] = [10, 10];
-    transparency: number = 100;
+    height: number = _height;
+    fieldSize: number[] = _fieldSize;
+    transparency: number = _transparency;
     list: string[];
-    listId: string = "mainList";
+    listOfFields: string = _listOfFields;
     selected: number;
 
     constructor(private dialog: MatDialog, private gridService: GridService) {
@@ -23,9 +23,9 @@ export class SettingsComponent {
     }
 
     ngOnInit(): void {
-        if (sessionStorage.getItem(this.listId) == null)
+        if (sessionStorage.getItem(this.listOfFields) == null)
             this.list = [];
-        else this.list = sessionStorage.getItem(this.listId).split(",");
+        else this.list = sessionStorage.getItem(this.listOfFields).split(",");
         this.redrawField();
     }
 
@@ -60,7 +60,7 @@ export class SettingsComponent {
         sessionStorage.setItem(key, JSON.stringify(gridData));
 
         this.list.push(key);
-        sessionStorage.setItem(this.listId, this.list.toString());
+        sessionStorage.setItem(this.listOfFields, this.list.toString());
     }
 
     getGrid() {

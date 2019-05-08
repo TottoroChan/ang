@@ -11,11 +11,11 @@ export class JPS extends IPathFinder {
     bestPoint: Vertex;
 
     constructor(isUsingDiagonal: boolean, playerService: PlayerService, 
-        gridService: GridService, stackService: StackService ) {        
+        gridService: GridService, stackService: StackService, private heuristicType: string) {        
         super(isUsingDiagonal, playerService, gridService, stackService);
         this.jumpedpoints = [];
         this.bestPoint = new Vertex(gridService.startPoint, null);
-        this.bestPoint.setH(this.isUsingDiagonal, gridService.finishPoint);
+        this.bestPoint.setH(gridService.finishPoint, heuristicType);
     }
 
     save(): object {
@@ -31,7 +31,6 @@ export class JPS extends IPathFinder {
     }
 
     async work(): Promise<Vertex> {
-        this.jumpedpoints = [];
         do {
             await this.playerService.whait();
             this.bestPoint = this.step();
@@ -47,15 +46,16 @@ export class JPS extends IPathFinder {
     step(): Vertex {
         this.jumpedpoints = this.jumpedpoints.filter(jp => jp.point != this.bestPoint.point);
         let neighbours = this.allNeighbourNodes();
-        this.setStackData(this.jumpedpoints.map(x => x.point));
-        neighbours.forEach(element => {
+        this.setStackData(neighbours.map(x => x.point));
+        for (let i = 0; i < neighbours.length; i++) {
+            const element = neighbours[i];
             element.setParent(this.bestPoint)
             let result = this.getJumpedPoints(element);
 
             if (result !== null) {
                 this.jumpedpoints.push(result);
             }
-        });
+        }
         
         this.fillJumpPoints(this.jumpedpoints.map(jp => jp.point));
 
@@ -68,7 +68,7 @@ export class JPS extends IPathFinder {
         return bestPoint;
     }
 
-    diagonalN(){
+    withDiagonal(){
         let neighbors = [];
         let x = this.bestPoint.point[0];
         let y = this.bestPoint.point[1];
@@ -120,7 +120,7 @@ export class JPS extends IPathFinder {
         return neighbors;
     }
 
-    notDiagonalN(){
+    withoutDiagonal(){
         let neighbors = [];
         let x = this.bestPoint.point[0];
         let y = this.bestPoint.point[1];
@@ -161,11 +161,11 @@ export class JPS extends IPathFinder {
         }
 
         else {
-            neighbours = this.isUsingDiagonal ? this.diagonalN() : this.notDiagonalN();
+            neighbours = this.isUsingDiagonal ? this.withDiagonal() : this.withoutDiagonal();
         }
 
         neighbours.forEach(element => {
-            element.setH(this.isUsingDiagonal, this.gridService.finishPoint);
+            element.setH(this.gridService.finishPoint, this.heuristicType);
         });
 
         return neighbours;
@@ -228,7 +228,7 @@ export class JPS extends IPathFinder {
         }
 
         let jump = new Vertex([x + dx, y + dy], point);
-        jump.setH(this.isUsingDiagonal, this.gridService.finishPoint);
+        jump.setH(this.gridService.finishPoint, this.heuristicType);
 
         return this.getJumpedPoints(jump);
     }
@@ -284,14 +284,14 @@ export class JPS extends IPathFinder {
         d3.selectAll("#cell")
             .each(function () {
                 let item = d3.select(this);
-                if (+item.attr("cX") == point[0] && + item.attr("cY") == point[1]) {
+                if (+item.attr("cx") == point[0] && + item.attr("cy") == point[1]) {
                     item.attr("class", "researchedPoint");
                 }
             });
         d3.selectAll("#neighbourCell")
             .each(function () {
                 let item = d3.select(this);
-                if (+item.attr("cX") == point[0] && + item.attr("cY") == point[1]) {
+                if (+item.attr("cx") == point[0] && + item.attr("cy") == point[1]) {
                     item.attr("class", "researchedPoint");
                 }
             });
@@ -301,7 +301,7 @@ export class JPS extends IPathFinder {
             .each(function () {
                 let item = d3.select(this);
                 for (let i = map.length - 1; i >= 0; i--)
-                    if (+item.attr("cX") == map[i][0] && +item.attr("cY") == map[i][1]) {
+                    if (+item.attr("cx") == map[i][0] && +item.attr("cy") == map[i][1]) {
                         item.attr("id", "jumpPoint");
                     }
             });
@@ -309,7 +309,7 @@ export class JPS extends IPathFinder {
             .each(function () {
                 let item = d3.select(this);
                 for (let i = map.length - 1; i >= 0; i--)
-                    if (+item.attr("cX") == map[i][0] && +item.attr("cY") == map[i][1]) {
+                    if (+item.attr("cx") == map[i][0] && +item.attr("cy") == map[i][1]) {
                         item.attr("id", "jumpPoint");
                     }
             });
@@ -318,7 +318,7 @@ export class JPS extends IPathFinder {
         d3.selectAll("#jumpPoint")
             .each(function () {
                 let item = d3.select(this);
-                if (+item.attr("cX") == point[0] && + item.attr("cY") == point[1]) {
+                if (+item.attr("cx") == point[0] && + item.attr("cy") == point[1]) {
                     item.attr("class", "bestJumpPoint");
                 } else {
                     item.attr("class", "");

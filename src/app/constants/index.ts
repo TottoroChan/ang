@@ -1,9 +1,16 @@
+export const _height: number = 30;
+export const _fieldSize: number[] = [10, 10];
+export const _transparency: number = 100;
+export const _listOfFields: string = "mainList";
 export const _shiftMatrix: number[][] = [[0, -1], [-1, 0], [1, 0], [0, 1], [-1, -1], [-1, 1], [1, -1], [1, 1]];;
 export const _algorithmList: [string, string][] = [["astar", "A*"],
-                                                    ["wave", "Wave"],
-                                                    ["bfs", "BFS"],
-                                                    ["jps", "JPS"],
-                                                    ["dk", "Dijkstra's"]];
+                                                    ["bfs", "Поиск в ширину"],
+                                                    ["wave", "Алгоритм Ли"],
+                                                    ["dk", "Алгоритм Дейкстры"],
+                                                    ["jps", "Прыжковой поиск"]];
+export const _heuristicList: [string, string][] = [["cheb", "Чебышева"],
+                                                    ["manh", "Манхеттена"],
+                                                    ["eucl", "Евклида"]];
 export const _startPoint: number[] = [0, 0];
 export const _finishPoint: number[] = [1, 0];
 

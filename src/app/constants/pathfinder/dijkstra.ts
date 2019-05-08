@@ -38,13 +38,10 @@ export class Dijkstra extends IPathFinder {
             if (result)
                 return result;
         }
-
-        throw new Error("I can't find path");
     }
 
     step(): Vertex {
-        let vertex = this.openSet[0]; //this.vertexWithMinF(); //вершина с самым маленьким F
-        this.openSet.splice(0, 1); // удалям вершину и отправляем ее на изучение
+        let vertex = this.openSet.shift(); //вершина с самым маленьким G
         
         this.setCurrentPoint(vertex.point);
         this.resultSet.push(vertex);
@@ -52,9 +49,8 @@ export class Dijkstra extends IPathFinder {
 
         let neighbours = this.gridService.neighbourNodes(vertex, this.isUsingDiagonal); // список соседних точек	
 
-        let neighbour = null;
         for (let i = 0; i < neighbours.length; i++) {
-            neighbour = neighbours[i];
+            let neighbour = neighbours[i];
             if (this.gridService.checkGoal(neighbour.point)) { // если финиш - выходим
                 neighbour.parent = vertex;
                 return neighbour;

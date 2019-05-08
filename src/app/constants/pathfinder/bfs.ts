@@ -31,14 +31,13 @@ export class BFS extends IPathFinder {
     }
 
     async work(): Promise<Vertex> {
-        let result = null;
         while (this.queue.length > 0) {
             let vertex = this.queue.shift();
             this.setCurrentPoint(vertex.point);
             this.setStackData(this.queue.map(x => x.point));
 
             await this.playerService.whait();
-            result = this.step(vertex);
+            let result = this.step(vertex);
 
             if (result) {
                 return result;

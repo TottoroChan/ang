@@ -83,7 +83,6 @@ export class GridService {
     }
 
     //Поски всех соседей точки 
-
     getNeighboursId(p: number[], isUsingDiagonal: boolean): number[][] {
         let result: number[][] = [];
         let n = isUsingDiagonal ? 8 : 4;

@@ -9,14 +9,14 @@ export class Astar extends IPathFinder {
     resultSet: Vertex[];
 
     constructor(isUsingDiagonal: boolean, playerService: PlayerService,
-        gridService: GridService, stackService: StackService) {
+        gridService: GridService, stackService: StackService, private heuristicType: string) {
         super(isUsingDiagonal, playerService, gridService, stackService);
         this.openSet = []; // Множество вершин, которые предстоит изучить.
         this.resultSet = []; // Множество изученых вершин
 
         let startPoint = new Vertex(this.gridService.startPoint, null);
         startPoint.setG(this.gridService.startPoint);
-        startPoint.setH(this.isUsingDiagonal, this.gridService.finishPoint);
+        startPoint.setH(this.gridService.finishPoint, heuristicType);
         startPoint.setF();
         this.openSet.push(startPoint); //добавление начальной вершины 
     }
@@ -41,12 +41,11 @@ export class Astar extends IPathFinder {
                 return result;
         }
 
-        throw new Error("I can't find path");
+        throw new Error("Я не могу найти путь");
     }
 
     step(): Vertex {
-        let vertex = this.openSet[0]; //this.vertexWithMinF(); //вершина с самым маленьким F
-        this.openSet.splice(0, 1); // удалям вершину и отправляем ее на изучение
+        let vertex = this.openSet.shift(); //this.vertexWithMinF(); //вершина с самым маленьким F
         
         this.setCurrentPoint(vertex.point);
         this.resultSet.push(vertex);
@@ -78,7 +77,7 @@ export class Astar extends IPathFinder {
 
         if (!id || g_score < neighbour.g) {//если нет в списке или можно обновить g   
             neighbour.g = g_score;
-            neighbour.setH(this.isUsingDiagonal, this.gridService.finishPoint);
+            neighbour.setH(this.gridService.finishPoint, this.heuristicType);
             neighbour.setF();
             neighbour.parent = vertex;
 

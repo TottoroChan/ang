@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject, interval, Subscription } from "rxjs";
 import { first } from 'rxjs/operators';
-import { IPathFinder } from '../constants/pathfinder/Ipathfinder';
 
 @Injectable({
     providedIn: 'root',

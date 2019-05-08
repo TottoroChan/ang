@@ -6,43 +6,42 @@ import { GridService } from 'src/app/services/grid.service';
 import { StackService } from 'src/app/services/stack.service';
 
 export class Wave extends IPathFinder {
-    d: number;
+    waveNumber: number;
     wave: Vertex[];
     visited: number[];
 
     constructor(isUsingDiagonal: boolean, playerService: PlayerService, 
         gridService: GridService, stackService: StackService ) {        
         super(isUsingDiagonal, playerService, gridService, stackService);
-        this.d = 0;
-
+        this.waveNumber = 0;
         let start = new Vertex(gridService.startPoint, null);
-        start.setD(this.d);
+        start.setWaveNumber(this.waveNumber);
         this.wave = [start];
         this.visited = [];
         for (let i = 0; i < gridService.data.length; i++) {
             this.visited[i] = null;            
         }
-        this.visited[gridService.toIndex(start.point)] = 0;
-    }    
+        this.visited[gridService.toIndex(start.point)] = this.waveNumber;
+    }  
     
     save(): object {
         return {
             visited: Object.assign(new Array(), this.visited), 
             wave: Object.assign(new Array(), this.wave), 
-            d: this.d}
+            waveNumber: this.waveNumber}
     }
     load(data) {
         this.visited = data.visited;
         this.wave = data.wave;
-        this.d = data.d;
+        this.waveNumber = data.waveNumber;
 
         this.updateIvents();
     }
 
     async work(): Promise<Vertex> {
         let result = null;
-        do {
-            this.d++;
+        while (this.wave.length > 0) {
+            this.waveNumber++;
             let set = this.wave;
             this.wave = [];
             for (let i = 0; i < set.length; i++) {
@@ -55,13 +54,11 @@ export class Wave extends IPathFinder {
                     return result;
                 }
             }
-
-        } while (this.wave.length > 0);
+        }
     }
 
     step(vertex: Vertex): Vertex {
         this.setCurrentPoint(vertex.point);
-        this.setStackData(this.wave.map(x => x.point));
         let neighbours = this.gridService.neighbourNodes(vertex, this.isUsingDiagonal);
         this.fillNeighbour(neighbours.map(r => r.point));
 
@@ -72,43 +69,44 @@ export class Wave extends IPathFinder {
                 node.parent = vertex;
 
                 if (this.gridService.checkGoal(node.point)) {
-                    this.visited[this.gridService.toIndex(node.point)] = node.parent.d + 1 + node.weight;
+                    this.visited[this.gridService.toIndex(node.point)] = node.parent.waveNumber + 1 + node.weight;
                     return node;
                 }
 
-                if (!node.d && node.parent != null) {
-                    node.setD(node.parent.d + node.weight);
+                if (!node.waveNumber) {
+                    node.setWaveNumber(node.parent.waveNumber + node.weight);
                     this.wave.push(node);
-                    this.visited[this.gridService.toIndex(node.point)] = node.d;
+                    this.visited[this.gridService.toIndex(node.point)] = node.waveNumber;
 
-                    this.drawWeight(node);
+                    this.drawWave(node);
                 }
             }
         }
+        this.setStackData(this.wave.map(x => x.point));
 
         return null;
     }
 
-    drawWeight(vertex: Vertex) {
+    drawWave(vertex: Vertex) {
         d3.select("svg").append("text")
             .attr("x", vertex.point[0] * this.gridService.height + this.gridService.height/4)
             .attr("y", vertex.point[1] * this.gridService.height + this.gridService.height/3)
             .attr("dy", ".25em")
-            .text(vertex.d.toFixed(1));
+            .text(vertex.waveNumber.toFixed(1));
     }
 
     rebuldPath(goal: Vertex) {
         if (this.visited[this.gridService.toIndex(goal.point)] != 0) {
             let neighbours = this.gridService.neighbourNodes(goal, this.isUsingDiagonal);
-            let minD = this.visited[this.gridService.toIndex(goal.point)];
+            let minWaveNumber = this.visited[this.gridService.toIndex(goal.point)];
             let parent = neighbours[0];
 
             for (let i = 0; i < neighbours.length; i++) {
                 let node = neighbours[i];
 
-                let d = this.visited[this.gridService.toIndex(node.point)]
-                if (d!=null && d < minD){
-                    minD = this.visited[this.gridService.toIndex(node.point)];
+                let waveNumber = this.visited[this.gridService.toIndex(node.point)]
+                if (waveNumber!=null && waveNumber < minWaveNumber){
+                    minWaveNumber = this.visited[this.gridService.toIndex(node.point)];
                     parent = node;                    
                 }
             }
@@ -119,3 +117,5 @@ export class Wave extends IPathFinder {
         return;
     }
 }
+
+

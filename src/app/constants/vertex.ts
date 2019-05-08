@@ -6,7 +6,7 @@ export class Vertex {
     g: number;
     h: number;
     f: number;
-    d: number;
+    waveNumber: number;
     direction: number[];
     isWall: boolean;
     weight: number;
@@ -21,20 +21,29 @@ export class Vertex {
         }
     }
 
-    setWeight(weight: number){
-        this.weight+= weight/100;
+    setWeight(weight: number) {
+        this.weight += weight / 100;
     }
 
     setG(start: number[]) {
         this.g = Math.abs(start[0] - this.point[0]) + Math.abs(start[1] - this.point[1]);
     }
 
-    setH(useDiagonal: boolean, finish: number[]) {
-        if (useDiagonal) {
-            this.h = Math.max(Math.abs(this.point[0] - finish[0]), Math.abs(this.point[1] - finish[1]));
-        }
-        else {
-            this.h = Math.abs(this.point[0] - finish[0]) + Math.abs(this.point[1] - finish[1]);
+    setH(finish: number[], type: string) {
+        let dx: number = Math.abs(this.point[0] - finish[0]);
+        let dy: number = Math.abs(this.point[1] - finish[1]);
+        switch (type) {
+            case "cheb":
+                this.h = Math.max(dx, dy)
+                break;
+            case "manh":
+                this.h = dx + dy
+                break;
+            case "eucl":
+                this.h = Math.sqrt(dx * dx + dy * dy); 
+                break;
+            default:
+                break;
         }
     }
 
@@ -42,8 +51,8 @@ export class Vertex {
         this.f = this.g + this.h;
     }
 
-    setD(d: number) {
-        this.d = d;
+    setWaveNumber(d: number) {
+        this.waveNumber = d;
     }
 
     setParent(parent: Vertex) {

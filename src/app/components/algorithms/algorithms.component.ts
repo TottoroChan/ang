@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { Component } from '@angular/core';
-import { _algorithmList} from 'src/app/constants';
+import { _algorithmList, _heuristicList } from 'src/app/constants';
 import { PlayerService } from 'src/app/services/player.service';
 import { GridService } from 'src/app/services/grid.service';
 import { IPathFinder } from 'src/app/constants/pathfinder/Ipathfinder';
@@ -20,17 +20,29 @@ export class AlgorithmsComponent {
     isUsingDiagonal: boolean = true;
     algorithm: IPathFinder = null;
     algorithmList: [string, string][] = _algorithmList;
-    algorithmId: string = _algorithmList[0][0];
-    state: {grid: string, stack: string, alg: object}[] = [];
+    heuristicList: [string, string][] = _heuristicList;
+    algorithmType: string = _algorithmList[0][0];
+    heuristicType: string = _heuristicList[0][0];
+    state: { grid: string, stack: string, alg: object }[] = [];
     stepCounter: number = null;
-    
-    constructor(private playerService: PlayerService, private gridService: GridService, private stackService: StackService){}
+    disableSelect: boolean = false;
+
+    constructor(private playerService: PlayerService, private gridService: GridService, private stackService: StackService) { }
+
+    algorithmChanged(){
+        if (this.algorithmType == "astar" || this.algorithmType == "jps"){
+           this.disableSelect = false;
+        }
+        else{
+            this.disableSelect = true;
+        }
+    }
 
     run() {
         if (this.algorithm != null) {
             this.algorithm.work()
-                .then(result => { 
-                    this.algorithm.reconstructPath(result) 
+                .then(result => {
+                    this.algorithm.reconstructPath(result)
                     this.algorithm = null;
                 });
             ;
@@ -40,12 +52,12 @@ export class AlgorithmsComponent {
     chooseAlgorithm() {
         this.playerService = new PlayerService();
 
-        switch (this.algorithmId) {
+        switch (this.algorithmType) {
             case "astar":
-                this.algorithm = new Astar(this.isUsingDiagonal, this.playerService, this.gridService, this.stackService)
+                this.algorithm = new Astar(this.isUsingDiagonal, this.playerService, this.gridService, this.stackService, this.heuristicType)
                 break;
             case "jps":
-                this.algorithm = new JPS(this.isUsingDiagonal, this.playerService, this.gridService, this.stackService)
+                this.algorithm = new JPS(this.isUsingDiagonal, this.playerService, this.gridService, this.stackService, this.heuristicType)
                 break;
             case "wave":
                 this.algorithm = new Wave(this.isUsingDiagonal, this.playerService, this.gridService, this.stackService)
@@ -57,7 +69,7 @@ export class AlgorithmsComponent {
                 this.algorithm = new Dijkstra(this.isUsingDiagonal, this.playerService, this.gridService, this.stackService)
                 break;
             default:
-                console.log("Some error")
+                console.log("Ошибка: Выбран несуществующий алгоритм.")
                 break;
         }
     }
@@ -71,8 +83,8 @@ export class AlgorithmsComponent {
         d3.selectAll(".researchedPoint").attr("class", "");
 
         d3.select("#stack .wraper")
-        .selectAll("*")
-        .remove();
+            .selectAll("*")
+            .remove();
 
         this.state = [];
         this.stepCounter = null;
@@ -91,7 +103,7 @@ export class AlgorithmsComponent {
     }
 
     forward() {
-        if (this.algorithm == null){
+        if (this.algorithm == null) {
             this.initAlgorithm();
         }
         this.save();
@@ -104,21 +116,21 @@ export class AlgorithmsComponent {
             stack: d3.select("#stack").html(),
             alg: this.algorithm.save()
         })
-        if (this.stepCounter == null){
+        if (this.stepCounter == null) {
             this.stepCounter = 0
         }
         else this.stepCounter++;
     }
 
     backward() {
-        if (this.stepCounter > 0){
-        let state = this.state[this.stepCounter];
-        d3.select("svg").html(state.grid),
-        d3.select("#stack").html(state.stack),
-        this.algorithm.load(state.alg);
+        if (this.stepCounter > 0) {
+            let state = this.state[this.stepCounter];
+            d3.select("svg").html(state.grid),
+                d3.select("#stack").html(state.stack),
+                this.algorithm.load(state.alg);
 
-        this.state.splice(this.stepCounter, 1)
-        this.stepCounter--;
+            this.state.splice(this.stepCounter, 1)
+            this.stepCounter--;
         }
     }
 
