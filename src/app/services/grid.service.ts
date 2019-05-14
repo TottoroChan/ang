@@ -17,7 +17,7 @@ export class GridService {
     private _fromStorage = false;
     private _length: number;
     workIsFinished: Subject<any> = new Subject(); 
-    trancparencyChanged: Subject<any> = new Subject(); 
+    transparencyChanged: Subject<any> = new Subject(); 
     gridChanged: Subject<any> = new Subject(); 
     isBackwardStep: Subject<any> = new Subject();
 
@@ -35,7 +35,16 @@ export class GridService {
     }
 
     changeTransparency(transparency: number): any {
-        this.trancparencyChanged.next(transparency)      
+        this.transparencyChanged.next(transparency)      
+    }
+
+
+    loadGrid(height: any, fieldSize: any, startPoint: any, finishPoint: any, data: any): any {
+        this._startPoint = startPoint;
+        this._finishPoint = finishPoint;
+        this._data = data;
+        this._fromStorage = true;
+        this.setGrid(fieldSize, height);
     }
 
     setGrid(size: number[], height: number) {
@@ -49,14 +58,6 @@ export class GridService {
         }
         this.gridChanged.next() 
         this._fromStorage = false;   
-    }
-
-    loadGrid(height: any, fieldSize: any, startPoint: any, finishPoint: any, data: any): any {
-        this._startPoint = startPoint;
-        this._finishPoint = finishPoint;
-        this._data = data;
-        this._fromStorage = true;
-        this.setGrid(fieldSize, height);
     }
 
     get length() { return this._length; }
@@ -83,7 +84,7 @@ export class GridService {
     }
 
     //Поски всех соседей точки 
-    getNeighboursId(p: number[], isUsingDiagonal: boolean): number[][] {
+    getNeighbours(p: number[], isUsingDiagonal: boolean): number[][] {
         let result: number[][] = [];
         let n = isUsingDiagonal ? 8 : 4;
 
@@ -99,7 +100,7 @@ export class GridService {
 
     neighbourNodes(vertex: Vertex, isUsingDiagonal: boolean): Vertex[] {
         let result: Vertex[] = [];
-        let neighbours = this.getNeighboursId(vertex.point, isUsingDiagonal);
+        let neighbours = this.getNeighbours(vertex.point, isUsingDiagonal);
 
         for (let i = 0; i < neighbours.length; i++) {
             let node = neighbours[i];
@@ -114,14 +115,9 @@ export class GridService {
         return result;
     }
 
-
     getValueByPoint(point: number[]) {
         let id = point[0] + this.fieldSize[0] * point[1];
         return this._data[id];
-    };
-    setValueByPoint(key: number[], value: number) {
-        let id = key[0] + this.fieldSize[0] * key[1];
-        this._data[id] = value;
     };
 
     toIndex(value: number[]) {

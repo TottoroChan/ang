@@ -10,6 +10,7 @@ import { Wave } from 'src/app/constants/pathfinder/wave';
 import { BFS } from 'src/app/constants/pathfinder/bfs';
 import { Dijkstra } from 'src/app/constants/pathfinder/dijkstra';
 import { StackService } from 'src/app/services/stack.service';
+import { Greedy } from 'src/app/constants/pathfinder/greedy';
 
 @Component({
     selector: 'algorithms',
@@ -25,12 +26,12 @@ export class AlgorithmsComponent {
     heuristicType: string = _heuristicList[0][0];
     state: { grid: string, stack: string, alg: object }[] = [];
     stepCounter: number = null;
-    disableSelect: boolean = false;
+    disableSelect: boolean = true;
 
     constructor(private playerService: PlayerService, private gridService: GridService, private stackService: StackService) { }
 
     algorithmChanged(){
-        if (this.algorithmType == "astar" || this.algorithmType == "jps"){
+        if (this.algorithmType == "astar" || this.algorithmType == "jps" || this.algorithmType == "greedy"){
            this.disableSelect = false;
         }
         else{
@@ -53,20 +54,23 @@ export class AlgorithmsComponent {
         this.playerService = new PlayerService();
 
         switch (this.algorithmType) {
+            case "bfs":
+                this.algorithm = new BFS(this.isUsingDiagonal, this.playerService, this.gridService, this.stackService)
+                break;
+            case "wave":
+                this.algorithm = new Wave(this.isUsingDiagonal, this.playerService, this.gridService, this.stackService)
+                break;
+            case "greedy":
+                this.algorithm = new Greedy(this.isUsingDiagonal, this.playerService, this.gridService, this.stackService, this.heuristicType)
+                break;
+            case "dk":
+                this.algorithm = new Dijkstra(this.isUsingDiagonal, this.playerService, this.gridService, this.stackService)
+                break;
             case "astar":
                 this.algorithm = new Astar(this.isUsingDiagonal, this.playerService, this.gridService, this.stackService, this.heuristicType)
                 break;
             case "jps":
                 this.algorithm = new JPS(this.isUsingDiagonal, this.playerService, this.gridService, this.stackService, this.heuristicType)
-                break;
-            case "wave":
-                this.algorithm = new Wave(this.isUsingDiagonal, this.playerService, this.gridService, this.stackService)
-                break;
-            case "bfs":
-                this.algorithm = new BFS(this.isUsingDiagonal, this.playerService, this.gridService, this.stackService)
-                break;
-            case "dk":
-                this.algorithm = new Dijkstra(this.isUsingDiagonal, this.playerService, this.gridService, this.stackService)
                 break;
             default:
                 console.log("Ошибка: Выбран несуществующий алгоритм.")

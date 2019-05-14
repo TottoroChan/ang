@@ -11,12 +11,12 @@ import { GridService } from 'src/app/services/grid.service';
 export class StackComponent {
 
     constructor(private stackService: StackService, private gridService: GridService) {
-        this.stackService.currentUpdated.subscribe(value => {
-            this.setCurrent(value);
+        this.stackService.currentPointUpdated.subscribe(value => {
+            this.setCurrentPoint(value);
         });
         this.stackService.stackUpdated.subscribe(value => {
             value.forEach(element => {
-                this.savePoint(element);
+                this.addPointToStack(element);
             });
         });
         this.stackService.isBackwardStep.subscribe(() => {
@@ -24,7 +24,7 @@ export class StackComponent {
         });
     }
 
-    setCurrent(point: number[]) {
+    setCurrentPoint(point: number[]) {
         let div = d3.select("#stack .current").append("div")
             .attr('class', "stack-element")
             .attr("x", point[0])
@@ -32,7 +32,7 @@ export class StackComponent {
         div.append("p").text("[" + point[0] + "," + point[1] + "]")
     }
 
-    savePoint(point: number[]) {
+    addPointToStack(point: number[]) {
         let div = d3.select("#stack .wraper").append("div")
             .attr('class', "stack-element")
             .attr("x", point[0])

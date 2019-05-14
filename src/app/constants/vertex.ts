@@ -6,15 +6,13 @@ export class Vertex {
     g: number;
     h: number;
     f: number;
+    weight: number;
     waveNumber: number;
     direction: number[];
-    isWall: boolean;
-    weight: number;
 
     constructor(point: number[], parent: Vertex) {
         this.point = point; // координата
         this.parent = parent;
-        this.isWall = false;
         this.weight = 1;
         if (parent != null) {
             this.direction = [point[0] - parent.point[0], point[1] - parent.point[1]]
@@ -58,12 +56,6 @@ export class Vertex {
     setParent(parent: Vertex) {
         this.parent = parent;
         this.direction = [this.point[0] - parent.point[0], this.point[1] - parent.point[1]]
-    }
-
-    setWall(value: number) {
-        if (value != CellType.Wall)
-            this.isWall = false;
-        else this.isWall = true;
     }
 
 }

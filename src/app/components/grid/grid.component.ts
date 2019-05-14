@@ -18,7 +18,7 @@ export class GridComponent {
         this.gridService.workIsFinished.subscribe(value => {
             this.fillPath(value);
         });
-        this.gridService.trancparencyChanged.subscribe(value => {
+        this.gridService.transparencyChanged.subscribe(value => {
             this.transparency = value;
         });
         this.gridService.gridChanged.subscribe(() => {

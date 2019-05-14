@@ -3,10 +3,11 @@ export const _fieldSize: number[] = [10, 10];
 export const _transparency: number = 100;
 export const _listOfFields: string = "mainList";
 export const _shiftMatrix: number[][] = [[0, -1], [-1, 0], [1, 0], [0, 1], [-1, -1], [-1, 1], [1, -1], [1, 1]];;
-export const _algorithmList: [string, string][] = [["astar", "A*"],
-                                                    ["bfs", "Поиск в ширину"],
+export const _algorithmList: [string, string][] = [ ["bfs", "Поиск в ширину"],
                                                     ["wave", "Алгоритм Ли"],
+                                                    ["greedy", "Жадный алгоритм"],
                                                     ["dk", "Алгоритм Дейкстры"],
+                                                    ["astar", "A*"],
                                                     ["jps", "Прыжковой поиск"]];
 export const _heuristicList: [string, string][] = [["cheb", "Чебышева"],
                                                     ["manh", "Манхеттена"],

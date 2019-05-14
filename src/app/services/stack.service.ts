@@ -9,7 +9,7 @@ export class StackService {
     private _data: number[][];
     private _current: number[];
     stackUpdated: Subject<any> = new Subject(); 
-    currentUpdated: Subject<any> = new Subject();
+    currentPointUpdated: Subject<any> = new Subject();
     isBackwardStep: Subject<any> = new Subject();;
 
     constructor() {
@@ -19,7 +19,7 @@ export class StackService {
 
     updateCurrent(value: number[]){
         this._current = value;
-        this.currentUpdated.next(this._current)
+        this.currentPointUpdated.next(this._current)
     }
 
     backwardStep(){
