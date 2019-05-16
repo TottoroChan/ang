@@ -106,13 +106,28 @@ export class GridService {
             let node = neighbours[i];
             let id = this.toIndex(node);
 
-            if (id >= 0 && this._data[id] != CellType.Wall) {
-                let vertex = new Vertex(node, null);
-                vertex.setWeight(this._data[id])
-                result.push(vertex)
+            if (id >= 0 && this._data[id] != CellType.Wall && this.checkAngle(vertex.point, node)) {
+                let neighbour = new Vertex(node, null);
+                neighbour.setWeight(this._data[id])
+                result.push(neighbour)
             }
         }
         return result;
+    }
+
+    checkAngle(point: number[], node: number[]): boolean {
+        let dx = node[0] - point[0];
+        let dy = node[1] - point[1];
+
+        if (dx != 0 && dy != 0){
+            let neighbour1 = this.toIndex([point[0], point[1]+dy]);
+            let neighbour2 = this.toIndex([point[0]+dx, point[1]]);
+
+            if (this.data[neighbour1]!= CellType.Wall && this.data[neighbour2]!= CellType.Wall)
+                return true;
+            else return false;
+        }
+        return true;
     }
 
     getValueByPoint(point: number[]) {
