@@ -140,7 +140,5 @@ export class AlgorithmsComponent {
 
     stop(): void {
         this.playerService.stop();
-        this.algorithm = null;
-        this.clean();
     }
 }
