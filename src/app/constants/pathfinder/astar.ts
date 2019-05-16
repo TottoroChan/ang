@@ -75,7 +75,7 @@ export class Astar extends IPathFinder {
         let g_score = vertex.g + (isDiaginal ? diagonalCost : neighbour.weight); //g для обрабатываеиого соседа
         let id = this.getElementID(neighbour.point);
 
-        if (!id || g_score < neighbour.g) {//если нет в списке или можно обновить g   
+        if (!id || g_score < this.openSet[id].g) {//если нет в списке или можно обновить g   
             neighbour.g = g_score;
             neighbour.setH(this.gridService.finishPoint, this.heuristicType);
             neighbour.setF();
@@ -86,7 +86,7 @@ export class Astar extends IPathFinder {
 
                 this.fillNeighbour([neighbour.point]);
             } else {
-                this.openSet[id].g = vertex.g;
+                this.openSet[id] = neighbour;
                 this.openSet[id].setF();
             }
             this.updateStack(this.openSet)

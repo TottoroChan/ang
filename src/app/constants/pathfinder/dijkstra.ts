@@ -70,7 +70,7 @@ export class Dijkstra extends IPathFinder {
         let g_score = vertex.g + (isDiaginal ? diagonalCost : neighbour.weight); //g для обрабатываеиого соседа
         let id = this.getElementID(neighbour.point);
 
-        if (!id || g_score < neighbour.g) {//если нет в списке или можно обновить g   
+        if (!id || g_score < this.openSet[id].g) {//если нет в списке или можно обновить g   
             neighbour.g = g_score;
             neighbour.parent = vertex;
 
@@ -79,7 +79,8 @@ export class Dijkstra extends IPathFinder {
 
                 this.fillNeighbour([neighbour.point]);
             } else {
-                this.openSet[id].g = vertex.g;
+                this.openSet[id].g = neighbour.g;
+                this.openSet[id].parent = neighbour.parent;
             }
             this.updateStack(this.openSet)
         }
