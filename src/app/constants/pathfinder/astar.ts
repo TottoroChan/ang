@@ -30,12 +30,12 @@ export class Astar extends IPathFinder {
         this.openSet = data.stack;
         this.resultSet = data.res;
 
-        this.updateIvents();
+        this.updateEvents();
     }
     
     async work(): Promise<Vertex> {
         while (this.openSet.length > 0) { //пока список изученых не пустой
-            await this.playerService.whait();
+            await this.playerService.wait();
             let result = this.step();
             if (result)
                 return result;
@@ -84,7 +84,7 @@ export class Astar extends IPathFinder {
             if (!id) {//если нет в списке
                 this.openSet.push(neighbour);
 
-                this.fillNeighbour([neighbour.point]);
+                this.fillNeighbours([neighbour.point]);
             } else {
                 this.openSet[id] = neighbour;
                 this.openSet[id].setF();

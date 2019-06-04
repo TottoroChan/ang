@@ -15,7 +15,7 @@ export class GridComponent {
     transparency: number = 100;
 
     constructor(private gridService: GridService) {
-        this.gridService.workIsFinished.subscribe(value => {
+        this.gridService.isWorkFinished.subscribe(value => {
             this.fillPath(value);
         });
         this.gridService.transparencyChanged.subscribe(value => {
@@ -26,7 +26,7 @@ export class GridComponent {
             this.build();
         });
         this.gridService.isBackwardStep.subscribe(() => {
-            this.addIvents();
+            this.addEvents();
         });
     }
 
@@ -37,7 +37,7 @@ export class GridComponent {
         d3.select("#stack .current")
             .selectAll("*")
             .remove();
-        d3.select("#stack .wraper")
+        d3.select("#stack .wrapper")
             .selectAll("*")
             .remove();
     }
@@ -78,7 +78,7 @@ export class GridComponent {
 
         this.drawPoint(this.gridService.startPoint, "start");
         this.drawPoint(this.gridService.finishPoint, "finish");
-        this.addIvents();
+        this.addEvents();
     }
 
     private drawPoint(point: number[], id: string) {
@@ -92,7 +92,7 @@ export class GridComponent {
     }
 
     //создание событий
-    private addIvents() {
+    private addEvents() {
         d3.selectAll("#cell")
             .on("mousedown", this.fill.bind(this))
             .on("mousemove", this.mousemove.bind(this))

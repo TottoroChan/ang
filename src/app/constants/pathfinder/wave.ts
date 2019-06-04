@@ -35,7 +35,7 @@ export class Wave extends IPathFinder {
         this.wave = data.wave;
         this.waveNumber = data.waveNumber;
 
-        this.updateIvents();
+        this.updateEvents();
     }
 
     async work(): Promise<Vertex> {
@@ -45,12 +45,12 @@ export class Wave extends IPathFinder {
             let set = this.wave;
             this.wave = [];
             for (let i = 0; i < set.length; i++) {
-                await this.playerService.whait();
+                await this.playerService.wait();
                 result = this.step(set[i]);
                 if (result) {
                     console.log("visited");
                     console.log(this.visited);
-                    this.rebuldPath(result);
+                    this.rebuildPath(result);
                     return result;
                 }
             }
@@ -60,7 +60,7 @@ export class Wave extends IPathFinder {
     step(vertex: Vertex): Vertex {
         this.setCurrentPoint(vertex.point);
         let neighbours = this.gridService.neighbourNodes(vertex, this.isUsingDiagonal);
-        this.fillNeighbour(neighbours.map(r => r.point));
+        this.fillNeighbours(neighbours.map(r => r.point));
 
         for (let i = 0; i < neighbours.length; i++) {
             let node = neighbours[i];
@@ -95,7 +95,7 @@ export class Wave extends IPathFinder {
             .text(vertex.waveNumber.toFixed(1));
     }
 
-    rebuldPath(goal: Vertex) {
+    rebuildPath(goal: Vertex) {
         if (this.visited[this.gridService.toIndex(goal.point)] != 0) {
             let neighbours = this.gridService.neighbourNodes(goal, this.isUsingDiagonal);
             let minWaveNumber = this.visited[this.gridService.toIndex(goal.point)];
@@ -112,7 +112,7 @@ export class Wave extends IPathFinder {
             }
             
             goal.parent = parent;
-            this.rebuldPath(goal.parent);
+            this.rebuildPath(goal.parent);
         }
         return;
     }

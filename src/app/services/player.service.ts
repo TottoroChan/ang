@@ -26,7 +26,7 @@ export class PlayerService {
         this.player.unsubscribe();
     }
 
-    whait(): Promise<{}> {
+    wait(): Promise<{}> {
         return this.subject.pipe(first()).toPromise()
     }
 }

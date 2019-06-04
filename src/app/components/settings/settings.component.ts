@@ -14,7 +14,7 @@ export class SettingsComponent {
     height: number = _height;
     fieldSize: number[] = _fieldSize;
     transparency: number = _transparency;
-    list: string[];
+    savedList: string[];
     listOfFields: string = _listOfFields;
     selected: number;
 
@@ -24,8 +24,8 @@ export class SettingsComponent {
 
     ngOnInit(): void {
         if (sessionStorage.getItem(this.listOfFields) == null)
-            this.list = [];
-        else this.list = sessionStorage.getItem(this.listOfFields).split(",");
+            this.savedList = [];
+        else this.savedList = sessionStorage.getItem(this.listOfFields).split(",");
         this.redrawField();
     }
 
@@ -59,12 +59,12 @@ export class SettingsComponent {
              this.gridService.startPoint, this.gridService.finishPoint, this.gridService.data)
         sessionStorage.setItem(key, JSON.stringify(gridData));
 
-        this.list.push(key);
-        sessionStorage.setItem(this.listOfFields, this.list.toString());
+        this.savedList.push(key);
+        sessionStorage.setItem(this.listOfFields, this.savedList.toString());
     }
 
     getGrid() {
-        let grid = JSON.parse(sessionStorage.getItem(this.list[this.selected]));
+        let grid = JSON.parse(sessionStorage.getItem(this.savedList[this.selected]));
         this.height = grid.height;
         this.fieldSize = grid.fieldSize;
 
@@ -73,6 +73,6 @@ export class SettingsComponent {
     }
 
     removeItem() {
-        this.list.splice(this.selected, 1)
+        this.savedList.splice(this.selected, 1)
     }
 }

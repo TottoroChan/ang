@@ -104,7 +104,7 @@ input {
   text-align: center;
 }
 
-#stack .wraper {
+#stack .wrapper {
   height: 100%;
   position: relative;
   width: 99%;
@@ -113,7 +113,7 @@ input {
 }
 
 #stack .current .stack-element,
-#stack .wraper .stack-element {
+#stack .wrapper .stack-element {
   display: inline-block;
   border: 1px solid #616161;
   border-radius: 10px;
@@ -129,7 +129,7 @@ input {
   line-height: 15px;
   margin: 13px 0;
 }
-#stack .wraper .stack-element:hover {
+#stack .wrapper .stack-element:hover {
   background: #3f51b5;
   color: white;
 }

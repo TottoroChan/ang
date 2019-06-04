@@ -86,7 +86,7 @@ export class AlgorithmsComponent {
         d3.selectAll("#jumpPoint").attr("id", "cell");
         d3.selectAll(".researchedPoint").attr("class", "");
 
-        d3.select("#stack .wraper")
+        d3.select("#stack .wrapper")
             .selectAll("*")
             .remove();
 

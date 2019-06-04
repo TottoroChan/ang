@@ -16,7 +16,7 @@ export class GridService {
     private _data: Uint8Array;
     private _fromStorage = false;
     private _length: number;
-    workIsFinished: Subject<any> = new Subject(); 
+    isWorkFinished: Subject<any> = new Subject(); 
     transparencyChanged: Subject<any> = new Subject(); 
     gridChanged: Subject<any> = new Subject(); 
     isBackwardStep: Subject<any> = new Subject();
@@ -27,7 +27,7 @@ export class GridService {
 
 
     finish(path: number[][]){
-        this.workIsFinished.next(path);
+        this.isWorkFinished.next(path);
     }
 
     backwardStep(){

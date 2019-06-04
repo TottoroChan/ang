@@ -18,7 +18,7 @@ export abstract class IPathFinder {
     load(data) {
         throw new Error("Not implemented");
     }
-    updateIvents(){
+    updateEvents(){
         this.stackService.backwardStep();
         this.gridService.backwardStep();
     }
@@ -34,7 +34,6 @@ export abstract class IPathFinder {
             node = node.parent;
         }
         this.gridService.finish(path);
-        //return path;
     }
 
     vertexisExist(set: Vertex[], vertex: Vertex): boolean {
@@ -56,7 +55,7 @@ export abstract class IPathFinder {
     }
 
     setStackData(array: number[][]) {
-        d3.select("#stack .wraper")
+        d3.select("#stack .wrapper")
             .selectAll("*")
             .remove();
 
@@ -72,7 +71,7 @@ export abstract class IPathFinder {
     }
 
 
-    fillNeighbour(map: number[][]) {
+    fillNeighbours(map: number[][]) {
         d3.selectAll("#currentpoint").each(function () {
             let item = d3.select(this);
             item.attr("id", "neighbourCell");

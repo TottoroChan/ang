@@ -20,7 +20,7 @@ export class StackComponent {
             });
         });
         this.stackService.isBackwardStep.subscribe(() => {
-            this.addIvents();
+            this.addEvents();
         });
     }
 
@@ -33,16 +33,16 @@ export class StackComponent {
     }
 
     addPointToStack(point: number[]) {
-        let div = d3.select("#stack .wraper").append("div")
+        let div = d3.select("#stack .wrapper").append("div")
             .attr('class', "stack-element")
             .attr("x", point[0])
             .attr("y", point[1]);
         div.append("p").text("[" + point[0] + "," + point[1] + "]")
 
-        this.addIvents();
+        this.addEvents();
     }
 
-    addIvents(){
+    addEvents(){
         let stackElement = d3.selectAll(".stack-element");
         if (stackElement) {
             stackElement.on("mouseover", this.stackMouseOver.bind(this))

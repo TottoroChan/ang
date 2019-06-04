@@ -27,7 +27,7 @@ export class Greedy  extends IPathFinder {
         this.queue = data.queue;
         this.levels = data.levels;
 
-        this.updateIvents();
+        this.updateEvents();
     }
 
     async work(): Promise<Vertex> {
@@ -36,7 +36,7 @@ export class Greedy  extends IPathFinder {
             this.setCurrentPoint(vertex.point);
             this.setStackData(this.queue.map(x => x.point));
 
-            await this.playerService.whait();
+            await this.playerService.wait();
             let result = this.step(vertex);
 
             if (result) {
@@ -47,7 +47,7 @@ export class Greedy  extends IPathFinder {
 
     step(vertex: Vertex) {
         let children = this.gridService.neighbourNodes(vertex, this.isUsingDiagonal)
-        this.fillNeighbour(children.map(r => r.point));
+        this.fillNeighbours(children.map(r => r.point));
 
         for (let i = 0; i < children.length; i++) {// все соседи точки
             let child = children[i];

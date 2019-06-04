@@ -7,32 +7,32 @@ import { GridService } from 'src/app/services/grid.service';
 import { StackService } from 'src/app/services/stack.service';
 
 export class JPS extends IPathFinder {
-    jumpedpoints: any[];
+    jumpedPoints: any[];
     bestPoint: Vertex;
 
     constructor(isUsingDiagonal: boolean, playerService: PlayerService, 
         gridService: GridService, stackService: StackService, private heuristicType: string) {        
         super(isUsingDiagonal, playerService, gridService, stackService);
-        this.jumpedpoints = [];
+        this.jumpedPoints = [];
         this.bestPoint = new Vertex(gridService.startPoint, null);
         this.bestPoint.setH(gridService.finishPoint, heuristicType);
     }
 
     save(): object {
         return {
-            stack: Object.assign(new Array(), this.jumpedpoints), 
+            stack: Object.assign(new Array(), this.jumpedPoints), 
             best: this.bestPoint}
     }
     load(data) {
-        this.jumpedpoints = data.stack;
+        this.jumpedPoints = data.stack;
         this.bestPoint = data.best;
 
-        this.updateIvents();
+        this.updateEvents();
     }
 
     async work(): Promise<Vertex> {
         do {
-            await this.playerService.whait();
+            await this.playerService.wait();
             this.bestPoint = this.step();
             this.setCurrentPoint(this.bestPoint.point);
 
@@ -44,7 +44,7 @@ export class JPS extends IPathFinder {
     }
 
     step(): Vertex {
-        this.jumpedpoints = this.jumpedpoints.filter(jp => jp.point != this.bestPoint.point);
+        this.jumpedPoints = this.jumpedPoints.filter(jp => jp.point != this.bestPoint.point);
         let neighbours = this.allNeighbourNodes();
         this.setStackData(neighbours.map(x => x.point));
         for (let i = 0; i < neighbours.length; i++) {
@@ -53,14 +53,14 @@ export class JPS extends IPathFinder {
             let result = this.getJumpedPoints(element);
 
             if (result !== null) {
-                this.jumpedpoints.push(result);
+                this.jumpedPoints.push(result);
             }
         }
         
-        this.fillJumpPoints(this.jumpedpoints.map(jp => jp.point));
+        this.fillJumpPoints(this.jumpedPoints.map(jp => jp.point));
 
-        let bestPoint = this.jumpedpoints[0];
-        this.jumpedpoints.forEach(element => {
+        let bestPoint = this.jumpedPoints[0];
+        this.jumpedPoints.forEach(element => {
             if (element.h < this.bestPoint.h)
                 bestPoint = element;
         });
@@ -76,42 +76,42 @@ export class JPS extends IPathFinder {
         let dy = this.bestPoint.direction[1];
                 
         if (dx !== 0 && dy !== 0) {
-            if (this.itIsMovmentPoint([x, y + dy])) {
+            if (this.isItMovementPoint([x, y + dy])) {
                 neighbors.push(new Vertex([x, y + dy], this.bestPoint));
             }
-            if (this.itIsMovmentPoint([x + dx, y])) {
+            if (this.isItMovementPoint([x + dx, y])) {
                 neighbors.push(new Vertex([x + dx, y], this.bestPoint));
             }
-            if (this.itIsMovmentPoint([x + dx, y + dy])) {
+            if (this.isItMovementPoint([x + dx, y + dy])) {
                 neighbors.push(new Vertex([x + dx, y + dy], this.bestPoint));
             }
-            if (!this.itIsMovmentPoint([x - dx, y])) {
+            if (!this.isItMovementPoint([x - dx, y])) {
                 neighbors.push(new Vertex([x - dx, y + dy], this.bestPoint));
             }
-            if (!this.itIsMovmentPoint([x, y - dy])) {
+            if (!this.isItMovementPoint([x, y - dy])) {
                 neighbors.push(new Vertex([x + dx, y - dy], this.bestPoint));
             }
         }
         else {
             if(dx === 0) {
-                if (this.itIsMovmentPoint([x, y + dy])) {
+                if (this.isItMovementPoint([x, y + dy])) {
                     neighbors.push(new Vertex([x, y + dy], this.bestPoint));
                 }
-                if (!this.itIsMovmentPoint([x + 1, y])) {
+                if (!this.isItMovementPoint([x + 1, y])) {
                     neighbors.push(new Vertex([x + 1, y + dy], this.bestPoint));
                 }
-                if (!this.itIsMovmentPoint([x - 1, y])) {
+                if (!this.isItMovementPoint([x - 1, y])) {
                     neighbors.push(new Vertex([x - 1, y + dy], this.bestPoint));
                 }
             }
             else {
-                if (this.itIsMovmentPoint([x + dx, y])) {
+                if (this.isItMovementPoint([x + dx, y])) {
                     neighbors.push(new Vertex([x + dx, y], this.bestPoint));
                 }
-                if (!this.itIsMovmentPoint([x, y + 1])) {
+                if (!this.isItMovementPoint([x, y + 1])) {
                     neighbors.push(new Vertex([x + dx, y + 1], this.bestPoint));
                 }
-                if (!this.itIsMovmentPoint([x, y - 1])) {
+                if (!this.isItMovementPoint([x, y - 1])) {
                     neighbors.push(new Vertex([x + dx, y - 1], this.bestPoint));
                 }
             }
@@ -128,24 +128,24 @@ export class JPS extends IPathFinder {
         let dy = this.bestPoint.direction[1];
 
         if (dx !== 0) {
-            if (this.itIsMovmentPoint([x, y - 1])) {
+            if (this.isItMovementPoint([x, y - 1])) {
                 neighbors.push(new Vertex([x, y - 1], this.bestPoint));
             }
-            if (this.itIsMovmentPoint([x, y + 1])) {
+            if (this.isItMovementPoint([x, y + 1])) {
                 neighbors.push(new Vertex([x, y + 1], this.bestPoint));
             }
-            if (this.itIsMovmentPoint([x + dx, y])) {
+            if (this.isItMovementPoint([x + dx, y])) {
                 neighbors.push(new Vertex([x + dx, y], this.bestPoint));
             }
         }
         else if (dy !== 0) {
-            if (this.itIsMovmentPoint([x - 1, y])) {
+            if (this.isItMovementPoint([x - 1, y])) {
                 neighbors.push(new Vertex([x - 1, y], this.bestPoint));
             }
-            if (this.itIsMovmentPoint([x + 1, y])) {
+            if (this.isItMovementPoint([x + 1, y])) {
                 neighbors.push(new Vertex([x + 1, y], this.bestPoint));
             }
-            if (this.itIsMovmentPoint([x, y + dy])) {
+            if (this.isItMovementPoint([x, y + dy])) {
                 neighbors.push(new Vertex([x, y + dy], this.bestPoint));
             }
         }
@@ -174,7 +174,7 @@ export class JPS extends IPathFinder {
     getJumpedPoints(point: Vertex): Vertex {
         this.fillResearchedPoint(point.point);
 
-        if (!this.itIsMovmentPoint(point.point)) {
+        if (!this.isItMovementPoint(point.point)) {
             return null;
         }
 
@@ -196,25 +196,25 @@ export class JPS extends IPathFinder {
                 let neighbour1 = [x, y + dy];
                 let neighbour2 = [x + dx, y];
 
-                if (this.itIsMovmentPoint(neighbour1) && this.getJumpedPoints(new Vertex(neighbour1, point)) != null)
+                if (this.isItMovementPoint(neighbour1) && this.getJumpedPoints(new Vertex(neighbour1, point)) != null)
                     return point;
 
-                if (this.itIsMovmentPoint(neighbour2) && this.getJumpedPoints(new Vertex(neighbour2, point)) != null)
+                if (this.isItMovementPoint(neighbour2) && this.getJumpedPoints(new Vertex(neighbour2, point)) != null)
                     return point;
             }
         }
         else {
             if (dx !== 0) {
-                if ((this.itIsMovmentPoint([x, y - 1]) && !this.itIsMovmentPoint([x - dx, y - 1])) ||
-                    (this.itIsMovmentPoint([x, y + 1]) && !this.itIsMovmentPoint([x - dx, y + 1]))) {
+                if ((this.isItMovementPoint([x, y - 1]) && !this.isItMovementPoint([x - dx, y - 1])) ||
+                    (this.isItMovementPoint([x, y + 1]) && !this.isItMovementPoint([x - dx, y + 1]))) {
                     return point;
                 }
             }
             else if (dy !== 0) {
                 let neighbour1 = [x - 1, y];
                 let neighbour2 = [x + 1, y];
-                if ((this.itIsMovmentPoint(neighbour1) && !this.itIsMovmentPoint([x - 1, y - dy])) ||
-                    (this.itIsMovmentPoint(neighbour2) && !this.itIsMovmentPoint([x + 1, y - dy]))) {
+                if ((this.isItMovementPoint(neighbour1) && !this.isItMovementPoint([x - 1, y - dy])) ||
+                    (this.isItMovementPoint(neighbour2) && !this.isItMovementPoint([x + 1, y - dy]))) {
                     return point;
                 }
                 
@@ -243,24 +243,24 @@ export class JPS extends IPathFinder {
         let dy = point.direction[1];
 
         if (dx != 0 && dy != 0 && this.isUsingDiagonal) {
-            if (!this.itIsMovmentPoint([px, py + dy]) && this.itIsMovmentPoint([x - dx, y + dy]))
+            if (!this.isItMovementPoint([px, py + dy]) && this.isItMovementPoint([x - dx, y + dy]))
                 set.push([x - dx, y + dy]);
-            if (!this.itIsMovmentPoint([px + dx, py]) && this.itIsMovmentPoint([x + dx, y - dy]))
+            if (!this.isItMovementPoint([px + dx, py]) && this.isItMovementPoint([x + dx, y - dy]))
                 set.push([x + dx, y - dy]);
         }
         else {
             if (dx == 0) {
-                if (!this.itIsMovmentPoint([px - 1, py + dy]) && this.itIsMovmentPoint([x - 1, y + dy]))
+                if (!this.isItMovementPoint([px - 1, py + dy]) && this.isItMovementPoint([x - 1, y + dy]))
                     set.push([x - 1, y + dy]);
 
-                if (!this.itIsMovmentPoint([px + 1, py + dy]) && this.itIsMovmentPoint([x + 1, y + dy]))
+                if (!this.isItMovementPoint([px + 1, py + dy]) && this.isItMovementPoint([x + 1, y + dy]))
                     set.push([x + 1, y + dy]);
             }
             else {
-                if (!this.itIsMovmentPoint([px + dx, py - 1]) && this.itIsMovmentPoint([x + dx, y - 1]))
+                if (!this.isItMovementPoint([px + dx, py - 1]) && this.isItMovementPoint([x + dx, y - 1]))
                     set.push([x + dx, y - 1]);
 
-                if (!this.itIsMovmentPoint([px + dx, py + 1]) && this.itIsMovmentPoint([x + dx, y + 1]))
+                if (!this.isItMovementPoint([px + dx, py + 1]) && this.isItMovementPoint([x + dx, y + 1]))
                     set.push([x + dx, y + 1]);
             }
         }
@@ -268,7 +268,7 @@ export class JPS extends IPathFinder {
         return set;
     }
 
-    itIsMovmentPoint(point: number[]) {
+    isItMovementPoint(point: number[]) {
         return this.itIsExistPoint(point) &&
             this.gridService.data[this.gridService.toIndex(point)] !== CellType.Wall;
     }
