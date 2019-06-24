@@ -38,6 +38,8 @@ export class Dijkstra extends IPathFinder {
             if (result)
                 return result;
         }
+
+        return null;
     }
 
     step(): Vertex {

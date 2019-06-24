@@ -34,6 +34,9 @@ export class JPS extends IPathFinder {
         do {
             await this.playerService.wait();
             this.bestPoint = this.step();
+            if (typeof(this.bestPoint) == "undefined")
+                return null;
+                
             this.setCurrentPoint(this.bestPoint.point);
 
             this.fillBestJumpPoint(this.bestPoint.point);

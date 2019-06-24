@@ -23,8 +23,9 @@ export class Astar extends IPathFinder {
 
     save(): object {
         return {
-            stack: Object.assign(new Array(), this.openSet), 
-            res: Object.assign(new Array(), this.resultSet)}
+            stack: Object.assign(new Array(), this.openSet),
+            res: Object.assign(new Array(), this.resultSet)
+        }
     }
     load(data) {
         this.openSet = data.stack;
@@ -32,7 +33,7 @@ export class Astar extends IPathFinder {
 
         this.updateEvents();
     }
-    
+
     async work(): Promise<Vertex> {
         while (this.openSet.length > 0) { //пока список изученых не пустой
             await this.playerService.wait();
@@ -41,12 +42,12 @@ export class Astar extends IPathFinder {
                 return result;
         }
 
-        throw new Error("Я не могу найти путь");
+        return null;
     }
 
     step(): Vertex {
         let vertex = this.openSet.shift(); //this.vertexWithMinF(); //вершина с самым маленьким F
-        
+
         this.setCurrentPoint(vertex.point);
         this.resultSet.push(vertex);
         this.setStackData(this.openSet.map(x => x.point));

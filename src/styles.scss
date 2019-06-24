@@ -19,6 +19,35 @@ input {
   padding: 5px 0;
 }
 
+#errorMessage {
+  display: none;
+  background: #ff010147;
+  height: 100px;
+  width: 100%;
+  position: fixed;
+  top: 30%;
+  padding: 10px;
+}
+#errorMessage .message{  
+  background: #F44336;
+  width: 450px;
+  margin: 0 auto;
+  text-align: center;
+  height: 80%;
+  display: block;
+  padding: 10px;
+  font-size: 24px;
+}
+#errorMessage .message p{  
+  margin-top: 0px;
+}
+#errorMessage .message .close{  
+  text-decoration: underline;
+}
+#errorMessage .message .close:hover{  
+  text-decoration: none;
+}
+
 #algorithm,
 #settings {
  display:contents;

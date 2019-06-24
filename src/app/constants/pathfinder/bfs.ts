@@ -43,6 +43,8 @@ export class BFS extends IPathFinder {
                 return result;
             }
         }
+
+        return null;
     }
 
     step(vertex: Vertex) {

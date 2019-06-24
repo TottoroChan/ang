@@ -43,7 +43,12 @@ export class AlgorithmsComponent {
         if (this.algorithm != null) {
             this.algorithm.work()
                 .then(result => {
-                    this.algorithm.reconstructPath(result)
+                    if (result == null){
+                        d3.select("#errorMessage").style("display", "block")
+                    }
+                    else{
+                        this.algorithm.reconstructPath(result)
+                    }
                     this.algorithm = null;
                 });
             ;

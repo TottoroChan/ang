@@ -43,6 +43,8 @@ export class Greedy  extends IPathFinder {
                 return result;
             }
         }
+
+        return null;
     }
 
     step(vertex: Vertex) {

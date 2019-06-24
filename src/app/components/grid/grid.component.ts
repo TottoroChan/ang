@@ -109,7 +109,12 @@ export class GridComponent {
                 .on("start", this.dragstarted)
                 .on("drag", this.dragged)
                 .on("end", this.dragended.bind(this))
-            );
+            );            
+
+        d3.selectAll("#errorMessage .message a.close")
+        .on("click", function(){
+            d3.select("#errorMessage").style("display", "none");
+        });
     }
 
     fillPath(path: number[][]) {
@@ -169,7 +174,6 @@ export class GridComponent {
     private mouseup(d: any, i: any, n: any) {
         this.isPenDown = false;
         this.currentColor = CellColor.Empty;
-        console.log(this.gridService.data)
     }
 
     //получение координат для рисования
